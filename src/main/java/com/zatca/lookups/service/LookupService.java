@@ -23,6 +23,16 @@ public class LookupService {
     @Autowired
     private MetaDataRepo metaDataRepo;
 
+    public void createRoot() {
+        Lookup lookup = new Lookup();
+        lookup.setCode("ROOT_CODE");
+        lookup.setGroup("ROOT_GROUP");
+        lookup.setTitleEn("ROOT_TITLE_EN");
+        lookup.setTitleAr("ROOT_TITLE_AR");
+
+        lookup = lookupRepo.save(lookup);
+    }
+
     /**
      * Create new lookup from RequestLookupDto
      *
