@@ -25,6 +25,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -72,5 +74,11 @@ class LookupsApplicationTests implements IntegrationAbstractTest {
 
 		Assert.isTrue(!lookupRepo.findByCode(dto.getCode()).isEmpty(),
 				"Can't find the created lookup");
+
+		MvcResult mvcResult1 = mockMvc.perform(MockMvcRequestBuilders.
+				get("/api/lookups/v1/rootLookupByDepth").param("depth", "0"))
+				.andDo(print()).andExpect(status().is2xxSuccessful()).andReturn();
+
+		System.out.print(mvcResult1);
 	}
 }
