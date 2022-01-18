@@ -41,6 +41,13 @@ public class LookupController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseLookupDto);
     }
 
+    @PostMapping("rootLookup")
+    public ResponseEntity<String> createRootLookup() {
+        lookupService.createRoot();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("New lookup saved successfully");
+    }
+
     @PostMapping("lookup")
     public ResponseEntity<String> createNewLookup(@Valid @RequestBody RequestLookupDto requestLookupDto) {
         lookupService.create(requestLookupDto);

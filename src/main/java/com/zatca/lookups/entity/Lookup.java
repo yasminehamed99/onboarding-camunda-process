@@ -12,8 +12,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Data
-@Entity
-@Table(name = "LOOKUP")
+@Entity(name = "LOOKUP")
 public class Lookup implements Serializable {
 
     @Id
