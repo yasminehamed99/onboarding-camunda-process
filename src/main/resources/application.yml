@@ -5,3 +5,7 @@ spring:
     url: jdbc:sqlserver://localhost:1433;databaseName=CSID;useUnicode=yes;characterEncoding=UTF-8
     username: sa
     password: SA@123
+
+server:
+  servlet:
+    context-path: /adminConfig
