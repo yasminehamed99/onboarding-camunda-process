@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -27,9 +30,9 @@ public class RequestLookupDto {
     @NotBlank(message = "code can't be null or empty")
     private String code;
 
-    @NotBlank(message = "Parent lookup id can't be null or zero")
-    @Min(value = 1, message = "Parent lookup id can't be null or zero")
-    private Long parentLookupId;
+    @NotBlank(message = "Parent lookup Code can't be null or zero")
+    @Min(value = 1, message = "Parent lookup Code can't be null or zero")
+    private String parentCode;
 
     private List<RequestLookupMetaDataDto> metaData;
 }

@@ -20,13 +20,13 @@ public interface IntegrationAbstractTest {
         return ow.writeValueAsString(object);
     }
 
-    default RequestLookupDto makeRandomLookupRequest(Long parentId) {
+    default RequestLookupDto makeRandomLookupRequest(String parentCode) {
         RequestLookupDto dto = new RequestLookupDto();
         dto.setCode("NEW_LOOKUP_" + randomNum());
         dto.setGroup("NEW_LOOKUP_GROUP_" + randomNum());
         dto.setTitleAr("TITLE_AR_" + randomNum());
         dto.setTitleEn("TITLE_EN_" + randomNum());
-        dto.setParentLookupId(parentId);
+        dto.setParentCode(parentCode);
         List<RequestLookupMetaDataDto> metaDataDtoList = new ArrayList<>();
         metaDataDtoList.add(new RequestLookupMetaDataDto("Key1", "Value1"));
         metaDataDtoList.add(new RequestLookupMetaDataDto("Key2", "Value2"));

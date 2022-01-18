@@ -1,10 +1,9 @@
 package com.zatca.lookups;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zatca.lookups.api.v1.request.RequestLookupDto;
-import com.zatca.lookups.api.v1.request.RequestLookupMetaDataDto;
 import com.zatca.lookups.entity.Lookup;
 import com.zatca.lookups.entity.LookupStatus;
+import com.zatca.lookups.exception.NotFoundBusinessException;
 import com.zatca.lookups.repository.LookupRepo;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,12 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.Assert;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -62,8 +56,9 @@ class LookupsApplicationTests implements IntegrationAbstractTest {
 	@Test
 	public void TEST_CREATE_NEW_LOOKUP() throws Exception {
 
-		Lookup rootLookup = lookupRepo.findByCode("ROOT").get();
-		RequestLookupDto dto = makeRandomLookupRequest(rootLookup.getId());
+		Lookup rootLookup = lookupRepo.findByCode("ROOT_CODE").orElseThrow(() ->
+				new NotFoundBusinessException("Can't find the root lookup"));
+		RequestLookupDto dto = makeRandomLookupRequest(rootLookup.getCode());
 
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/lookups/v1/lookup")
 						.contentType(MediaType.APPLICATION_JSON)
