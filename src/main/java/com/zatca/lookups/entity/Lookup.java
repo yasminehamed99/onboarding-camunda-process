@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.zatca.lookups.api.v1.response.ResponseLookupDto;
 import com.zatca.lookups.api.v1.response.ResponseLookupMetaDataDto;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,7 +13,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-@Data
+@Setter
+@Getter
 @Entity(name = "LOOKUP")
 public class Lookup implements Serializable {
 
@@ -28,7 +31,7 @@ public class Lookup implements Serializable {
     @Column(name = "TITLE_AR")
     private String titleAr;
 
-    @Column(name = "CODE")
+    @Column(name = "CODE", unique = true)
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -60,10 +63,10 @@ public class Lookup implements Serializable {
 
         List<ResponseLookupMetaDataDto> metaDataDtoList = null;
         if(lookupMetaData != null && !lookupMetaData.isEmpty()) {
-            metaDataDtoList = lookupMetaData.parallelStream().map(md -> md.convertToDto()).collect(Collectors.toList());
+            metaDataDtoList = lookupMetaData.parallelStream().map(LookupMetaData::convertToDto).collect(Collectors.toList());
         }
 
-        ResponseLookupDto dto = new ResponseLookupDto(this.group, this.titleAr, this.titleEn, this.code,
+        ResponseLookupDto dto = new ResponseLookupDto(this.id, this.group, this.titleAr, this.titleEn, this.code,
                 parentLookupId, null, metaDataDtoList);
 
         if (depth > 0) {

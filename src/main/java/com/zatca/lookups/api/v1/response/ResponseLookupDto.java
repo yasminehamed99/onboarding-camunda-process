@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ResponseLookupDto {
 
+    private Long id;
     private String group;
     private String titleAr;
     private String titleEn;

@@ -28,14 +28,17 @@ public class LookupController {
     }
 
     @GetMapping("lookupByCodeAndDepth")
-    public ResponseEntity<ResponseLookupDto> findByCodeAndDepth(int depth, String lookupCode) {
+    public ResponseEntity<ResponseLookupDto> findByCodeAndDepth(int depth, @Valid
+                        @NotBlank(message = "Lookup code is mandatory") String lookupCode) {
+
         ResponseLookupDto responseLookupDto = lookupService.findFromCodeByDepth(depth, lookupCode);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseLookupDto);
     }
 
     @GetMapping("lookupByCode")
-    public ResponseEntity<ResponseLookupDto> findByCode(String lookupCode) {
+    public ResponseEntity<ResponseLookupDto> findByCode(@Valid @NotBlank(message = "Lookup code is mandatory")
+                                                                    String lookupCode) {
         ResponseLookupDto responseLookupDto = lookupService.findFromCodeByDepth(0, lookupCode);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseLookupDto);
@@ -72,6 +75,7 @@ public class LookupController {
                                                   String code) {
 
         lookupService.logicalDelete(code);
-        return ResponseEntity.status(HttpStatus.OK).body("New lookup saved successfully");
+        return ResponseEntity.status(HttpStatus.OK).body("Lookup with code = " + code + " " +
+                "has been deleted successfully");
     }
 }
