@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ConcurrentModificationException;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,6 +53,7 @@ public class LookupService {
                 -> new NotFoundBusinessException("Can't find the parent lookup with code = " +
                 requestLookupDto.getParentCode()));
 
+        lookup.setLookupStatus(LookupStatus.ENABLED);
         lookup.setParentLookup(parentLookup);
         lookup.setCode(requestLookupDto.getCode());
         lookup.setTitleAr(requestLookupDto.getTitleAr());
@@ -118,6 +118,8 @@ public class LookupService {
         lookup.setCode(requestLookupDto.getCode());
         lookup.setTitleAr(requestLookupDto.getTitleAr());
         lookup.setTitleEn(requestLookupDto.getTitleEn());
+        lookup.setLookupStatus(LookupStatus.ENABLED);
+        lookup.setGroup(requestLookupDto.getGroup());
 
         // Save for the first time to get the sequence id
         lookup = lookupRepo.save(lookup);
