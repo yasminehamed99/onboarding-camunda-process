@@ -12,15 +12,15 @@ public class DevPortal {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 //    @Column(name = "password")
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "password_id", referencedColumnName = "id")
     private Password password;
 //    @Column(name = "Verification_Links_Validity_Period")
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "verificationLinksValidityPeriod_id", referencedColumnName = "id")
     private VerificationLinksValidityPeriod verificationLinksValidityPeriod;
 //    @Column(name = "Account_Lockout")
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "accountLockout_id", referencedColumnName = "id")
     private AccountLockout accountLockout;
 
