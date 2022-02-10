@@ -11,13 +11,13 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "smeNotification_id")
     private NotificationInfo smeNotification;
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "onboardingNotification_id", referencedColumnName = "id")
     private NotificationInfo onboardingNotification;
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "reminder_id", referencedColumnName = "id")
     private Reminder reportingClearancePeriodicNotification;
 

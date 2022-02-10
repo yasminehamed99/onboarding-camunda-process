@@ -2,11 +2,13 @@ package com.zatca.lookups.entity.configuration.invoiceMatchingReports;
 
 import com.zatca.lookups.api.v1.dto.invoiceMatchingReports.TwoWayClearanceDTO;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class TwoWayClearance {
 
     public TwoWayClearance(TwoWayClearanceDTO dto) {
@@ -32,5 +34,12 @@ public class TwoWayClearance {
     private InvoiceMatchingReports invoiceMatchingReports;
     @OneToOne(mappedBy = "selfBilled")
     private InvoiceMatchingReports invoiceMatchingReports1;
+
+    public void setTwoWayClearanceProperties(TwoWayClearanceDTO dto) {
+        lagBetweenEndAndGenerationInMonths = dto.getLagBetweenEndAndGenerationInMonths();
+        lagBetweenEndAndGenerationInDays = dto.getLagBetweenEndAndGenerationInDays();
+        maxPeriodOfMatchingReports = dto.getMaxPeriodOfMatchingReports();
+        maxHistoricalDataForMatchingReports = dto.getMaxHistoricalDataForMatchingReports();
+    }
 
 }

@@ -27,4 +27,9 @@ public class NumOfOtp {
     @OneToOne(mappedBy = "numOfOtp")
     private Onboarding onboarding;
 
+    public void setProberties(NumOfOtpDTO dto) {
+        maxNumOfOtpDisplayed = dto.getMaxNumOfOtpDisplayed();
+        maxNumOfOtpMultiDevices = dto.getMaxNumOfOtpMultiDevices();
+    }
+
 }
