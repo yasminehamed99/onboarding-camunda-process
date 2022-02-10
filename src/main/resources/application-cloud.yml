@@ -16,6 +16,10 @@ spring:
     port: ${REDIS_PORT}
     password: ${REDIS_PASSWORD}
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 server:
   port: ${SERVER_PORT:8080}
 

@@ -55,3 +55,6 @@ INSERT [dbo].[taxpayer_vat] ([id], [vat_status], [vat]) VALUES (12, N'ENABLED', 
 INSERT INTO [dbo].[error] ([id],[error_code],[error_message]) VALUES (1,'BR-52','Each Additional supporting document (BG-24) shall contain a Supporting document reference (BT-122)')
 
 INSERT INTO [dbo].[error]([id],[error_code],[error_message]) VALUES (2,'BR-31','Each Document level allowance (BG-20) shall have a Document level allowance amount (BT-92)')
+
+INSERT INTO [dbo].[clearance_status] ([id],[status]) VALUES (1,'ENABLED')
+
