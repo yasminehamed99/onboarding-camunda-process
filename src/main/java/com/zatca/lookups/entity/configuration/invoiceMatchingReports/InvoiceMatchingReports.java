@@ -11,10 +11,10 @@ public class InvoiceMatchingReports {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "twoWayClearance_id", referencedColumnName = "id")
     private TwoWayClearance twoWayClearance;
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
 //    @JoinColumn(name = "twoWayClearance_id", referencedColumnName = "id")
     private TwoWayClearance selfBilled;
 

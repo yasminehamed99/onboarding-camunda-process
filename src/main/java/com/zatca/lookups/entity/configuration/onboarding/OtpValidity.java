@@ -2,11 +2,13 @@ package com.zatca.lookups.entity.configuration.onboarding;
 
 import com.zatca.lookups.api.v1.dto.onboarding.OtpValidityDTO;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class OtpValidity {
 
     public OtpValidity(OtpValidityDTO dto) {
@@ -24,4 +26,9 @@ public class OtpValidity {
 
     @OneToOne(mappedBy = "otpValidity")
     private Onboarding onboarding;
+
+    public void setProperties(OtpValidityDTO dto) {
+        value = dto.getValue();
+        timePeriod = dto.getTimePeriod();
+    }
 }

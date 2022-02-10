@@ -1,6 +1,7 @@
 package com.zatca.lookups.api.v1;
 
-import com.zatca.lookups.api.v1.dto.ClearanceDTO;
+import com.zatca.lookups.api.v1.dto.AdminConfigDTO;
+import com.zatca.lookups.api.v1.dto.TaxpayerVatDTO;
 import com.zatca.lookups.api.v1.dto.devportal.DevPortalDTO;
 import com.zatca.lookups.api.v1.dto.errorMessages.ErrorDTO;
 import com.zatca.lookups.api.v1.dto.invoiceMatchingReports.InvoiceMatchingReportsDTO;
@@ -13,10 +14,15 @@ import com.zatca.lookups.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/lookups/v1")
+@Validated
 public class ConfigManageController {
 
     @Autowired
@@ -39,12 +45,26 @@ public class ConfigManageController {
 
     @Autowired
     private NotificationService notificationService;
-    @GetMapping("/search/errorCode")
-    public ErrorDTO searchByErrorCode(@RequestHeader("Error-Code") String errorCode, @RequestHeader("Accept-Language") String language) {
 
-        ErrorDTO error = new ErrorDTO();
+    @Autowired
+    private ErrorService errorService;
+
+    @Autowired
+    private TaxpayerVatService taxpayerVatService;
+
+    @Autowired
+    private AdminConfigService adminConfigService;
+
+    @Autowired
+    private ClearanceStatusService clearanceStatusService;
+
+    @GetMapping("/search/errorCode")
+    public ResponseEntity<ErrorDTO> searchByErrorCode(@RequestHeader("Error-Code") String errorCode, @RequestHeader("Accept-Language") String language) {
+
         // TODO: get error by code
-        return error;
+        ErrorDTO error = errorService.findErrorByCode(errorCode);
+
+        return ResponseEntity.ok(error);
     }
 
     @GetMapping("/search/keyword")
@@ -55,10 +75,11 @@ public class ConfigManageController {
         return error;
     }
 
-    @PostMapping("/changeStatus")
-    public ClearanceDTO changeStatus(@RequestHeader("VAT-Number") String vat) {
+    @PostMapping("/saveVat")
+    public ResponseEntity<String> changeStatus(@Valid @RequestBody TaxpayerVatDTO request) {
         // TODO: get information by vat number and let user change status
-        return new ClearanceDTO();
+        taxpayerVatService.saveVAT(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body("VAT Saved Successfully");
     }
 
     @PostMapping("/showPageContent")
@@ -66,52 +87,30 @@ public class ConfigManageController {
 
     }
 
-    @PostMapping("/saveDevPortal")
-    public ResponseEntity<String> saveDevPortal(@RequestBody DevPortalDTO devPortal) {
 
-        devPortalService.saveDevPortalConfig(devPortal);
-        return ResponseEntity.status(HttpStatus.OK).body("Developer Portal configuration saved successfully");
+    @PutMapping("/save")
+    public ResponseEntity<String> update(@Valid @RequestBody AdminConfigDTO request) {
+        adminConfigService.updateConfigurations(request);
+        return ResponseEntity.ok("Updated Successfully");
     }
 
-    @PostMapping("/saveSmePortal")
-    public ResponseEntity<String> saveSmePortal(@RequestBody SmePortalDTO smePortal) {
+    @GetMapping("/save")
+    public ResponseEntity<AdminConfigDTO> find() {
+        AdminConfigDTO dto = adminConfigService.findConfigurations();
 
-        smePortalService.saveSmePortalConfig(smePortal);
-        return ResponseEntity.status(HttpStatus.OK).body("SME Portal configuration saved successfully");
+        return ResponseEntity.ok(dto);
     }
 
-    @PostMapping("/saveOnboarding")
-    public ResponseEntity<String> saveOnboarding(@RequestBody OnboardingDTO onboarding) {
+    @GetMapping("/getClearanceStatus")
+    public ResponseEntity<String> getClearanceStatus() {
 
-        onboardingService.saveOnboardingConfig(onboarding);
-        return ResponseEntity.status(HttpStatus.OK).body("Onboarding configuration saved successfully");
+        String status = clearanceStatusService.findClearanceStatus();
+        return ResponseEntity.ok(status);
     }
 
-    @PostMapping("/saveTaxpayerAuthorisation")
-    public ResponseEntity<String> saveTaxpayerAuth(@RequestBody TaxpayerAuthorisationDTO taxpayerAuthorisation) {
-
-        taxpayerAuthService.saveTaxpayerAuthConfig(taxpayerAuthorisation);
-        return ResponseEntity.status(HttpStatus.OK).body("Taxpayer Auth configuration saved successfully");
-    }
-
-    @PostMapping("/saveInvoiceMatchingReports")
-    public ResponseEntity<String> saveInvoiceMatchingReports(@RequestBody InvoiceMatchingReportsDTO invoiceMatchingReportsDTO) {
-
-        invoiceMatchingReportsService.saveInvoiceMatchingReportsConfig(invoiceMatchingReportsDTO);
-        return ResponseEntity.status(HttpStatus.OK).body("Invoice Matching Reports configuration saved successfully");
-    }
-
-    @PostMapping("/saveTaxpayerData")
-    public ResponseEntity<String> saveTaxpayerData(@RequestBody TaxpayerDataDTO taxpayerDataDTO) {
-
-        taxpayerDataService.saveTaxpayerDataConfig(taxpayerDataDTO);
-        return ResponseEntity.status(HttpStatus.OK).body("Taxpayer Data configuration saved successfully");
-    }
-
-    @PostMapping("/saveNotification")
-    public ResponseEntity<String> saveNotificationConfig(@RequestBody NotificationDTO notificationDTO) {
-
-        notificationService.saveNotificationConfig(notificationDTO);
-        return ResponseEntity.status(HttpStatus.OK).body("Notification configuration saved successfully");
+    @GetMapping("/getVatNumbers")
+    public ResponseEntity<List<TaxpayerVatDTO>> getVat() {
+        List<TaxpayerVatDTO> vatNumbers = taxpayerVatService.findVatNumbers();
+        return ResponseEntity.ok(vatNumbers);
     }
 }

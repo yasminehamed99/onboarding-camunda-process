@@ -4,11 +4,13 @@ import com.zatca.lookups.api.v1.dto.taxpayerAuthorisation.AuthorisedStatus;
 import com.zatca.lookups.api.v1.dto.taxpayerAuthorisation.AuthorisedStatusUntilBufferPeriodEnd;
 import com.zatca.lookups.api.v1.dto.taxpayerAuthorisation.PortalDTO;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Portal {
 
     public Portal(PortalDTO portalDTO) {
@@ -31,4 +33,11 @@ public class Portal {
     private long value;
     @Column(name = "Time_Period")
     private String timePeriod;
+
+    public void setProperties(PortalDTO dto) {
+        authorisedStatus = dto.getAuthorisedStatus();
+        authorisedStatusUntilBufferPeriodEnd = dto.getAuthorisedStatusUntilBufferPeriodEnd();
+        value = dto.getValue();
+        timePeriod = dto.getTimePeriod();
+    }
 }
