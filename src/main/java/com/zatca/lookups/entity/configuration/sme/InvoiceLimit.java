@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class InvoiceLimit {
 
     public InvoiceLimit(InvoiceLimitDTO dto) {
-        numOfInvoices = dto.getNumOfInvoices();
+        numberOfInvoices = dto.getNumberOfInvoices();
         timePeriod = dto.getTimePeriod();
         value = dto.getValue();
     }
@@ -21,11 +21,15 @@ public class InvoiceLimit {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     @Column(name = "Num_Of_Invoices")
-    private long numOfInvoices;
+    private long numberOfInvoices;
     @Column(name = "value")
     private long value;
     @Column(name = "Time_Period")
     private String timePeriod;
 
-
+    public void setProperties(InvoiceLimitDTO dto) {
+        numberOfInvoices = dto.getNumberOfInvoices();
+        timePeriod = dto.getTimePeriod();
+        value = dto.getValue();
+    }
 }

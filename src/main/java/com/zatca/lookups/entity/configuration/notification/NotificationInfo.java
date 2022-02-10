@@ -1,6 +1,5 @@
 package com.zatca.lookups.entity.configuration.notification;
 
-import com.zatca.lookups.api.v1.dto.notification.NotificationDTO;
 import com.zatca.lookups.api.v1.dto.notification.NotificationInfoDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.List;
 public class NotificationInfo {
 
     public NotificationInfo(NotificationInfoDTO dto) {
-        numOfReminders = dto.getNumOfReminders();
+        numOfReminders = dto.getSmePortalAccessRevocationNumberOfReminders();
         List<Reminder> temp = new ArrayList<>();
         for(com.zatca.lookups.api.v1.dto.notification.Reminder reminder : dto.getReminders()) {
             Reminder tempReminder = new Reminder(reminder);
