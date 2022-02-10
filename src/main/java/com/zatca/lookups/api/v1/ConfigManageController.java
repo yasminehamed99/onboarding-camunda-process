@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/lookups/v1")
@@ -53,6 +54,9 @@ public class ConfigManageController {
 
     @Autowired
     private AdminConfigService adminConfigService;
+
+    @Autowired
+    private ClearanceStatusService clearanceStatusService;
 
     @GetMapping("/search/errorCode")
     public ResponseEntity<ErrorDTO> searchByErrorCode(@RequestHeader("Error-Code") String errorCode, @RequestHeader("Accept-Language") String language) {
@@ -95,5 +99,18 @@ public class ConfigManageController {
         AdminConfigDTO dto = adminConfigService.findConfigurations();
 
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/getClearanceStatus")
+    public ResponseEntity<String> getClearanceStatus() {
+
+        String status = clearanceStatusService.findClearanceStatus();
+        return ResponseEntity.ok(status);
+    }
+
+    @GetMapping("/getVatNumbers")
+    public ResponseEntity<List<TaxpayerVatDTO>> getVat() {
+        List<TaxpayerVatDTO> vatNumbers = taxpayerVatService.findVatNumbers();
+        return ResponseEntity.ok(vatNumbers);
     }
 }
