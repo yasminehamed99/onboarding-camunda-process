@@ -47,7 +47,7 @@ public class LookupsApplication {
 
 		List<TaxpayerData> taxpayerData  = taxpayerDataRepo.findAll();
 		if (ObjectUtils.isEmpty(taxpayerData)) {
-			File file = ResourceUtils.getFile("classpath:data.sql");
+			File file = new File("/resources/data.sql");
 			String insertStatements= new String(Files.readAllBytes(file.toPath()));
 			jdbcTemplate.execute(insertStatements);
 		}
