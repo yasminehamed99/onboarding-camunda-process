@@ -15,8 +15,6 @@ public class ResponseLookupDto {
 
     private Long id;
     private String group;
-    private String titleAr;
-    private String titleEn;
     private String code;
     private Long parentLookupId;
 

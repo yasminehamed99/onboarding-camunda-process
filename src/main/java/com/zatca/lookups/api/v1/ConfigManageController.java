@@ -2,14 +2,8 @@ package com.zatca.lookups.api.v1;
 
 import com.zatca.lookups.api.v1.dto.AdminConfigDTO;
 import com.zatca.lookups.api.v1.dto.TaxpayerVatDTO;
-import com.zatca.lookups.api.v1.dto.devportal.DevPortalDTO;
 import com.zatca.lookups.api.v1.dto.errorMessages.ErrorDTO;
-import com.zatca.lookups.api.v1.dto.invoiceMatchingReports.InvoiceMatchingReportsDTO;
-import com.zatca.lookups.api.v1.dto.notification.NotificationDTO;
-import com.zatca.lookups.api.v1.dto.onboarding.OnboardingDTO;
-import com.zatca.lookups.api.v1.dto.sme.SmePortalDTO;
-import com.zatca.lookups.api.v1.dto.taxpayerAuthorisation.TaxpayerAuthorisationDTO;
-import com.zatca.lookups.api.v1.dto.taxpayerData.TaxpayerDataDTO;
+import com.zatca.lookups.convertorEngine.ConvertorFacade;
 import com.zatca.lookups.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,6 +52,9 @@ public class ConfigManageController {
     @Autowired
     private ClearanceStatusService clearanceStatusService;
 
+    @Autowired
+    private ConvertorFacade convertor;
+
     @GetMapping("/search/errorCode")
     public ResponseEntity<ErrorDTO> searchByErrorCode(@RequestHeader("Error-Code") String errorCode, @RequestHeader("Accept-Language") String language) {
 
@@ -90,7 +87,7 @@ public class ConfigManageController {
 
     @PutMapping("/save")
     public ResponseEntity<String> update(@Valid @RequestBody AdminConfigDTO request) {
-        adminConfigService.updateConfigurations(request);
+        System.out.println(convertor.convertToLookup(request));
         return ResponseEntity.ok("Updated Successfully");
     }
 

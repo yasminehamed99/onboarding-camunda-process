@@ -45,8 +45,6 @@ class LookupsApplicationTests implements IntegrationAbstractTest {
 
 		Lookup root = new Lookup();
 		root.setLookupStatus(LookupStatus.ENABLED);
-		root.setTitleAr("الجذر");
-		root.setTitleEn("Root");
 		root.setGroup("Root");
 		root.setCode("ROOT");
 
