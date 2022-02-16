@@ -15,6 +15,38 @@ import java.util.*;
 public class ConvertorFacade {
 
     private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
+    public final static Map<Class<?>, Class<?>> primitvesMap = new HashMap<Class<?>, Class<?>>();
+    static {
+        primitvesMap.put(boolean.class, Boolean.class);
+        primitvesMap.put(byte.class, Byte.class);
+        primitvesMap.put(short.class, Short.class);
+        primitvesMap.put(char.class, Character.class);
+        primitvesMap.put(int.class, Integer.class);
+        primitvesMap.put(long.class, Long.class);
+        primitvesMap.put(float.class, Float.class);
+        primitvesMap.put(double.class, Double.class);
+    }
+
+    public <T extends Object> T convertFromLookup(Lookup lookup, Class<T> type) {
+        if(lookup.getType().equals(type))
+            throw new ConvertingException("Lookup have different type from the provided type");
+
+        T object = type.cast(newObjectFromType(lookup.getType()));
+        fillFields(object, lookup);
+
+        lookup.getChilds().stream().forEach(c -> {
+            try {
+                Object cObject = convertFromLookup(c, Class.forName(c.getType()));
+                Field f = object.getClass().getDeclaredField(c.getCode());
+                f.setAccessible(true);
+                f.set(object, cObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        return object;
+    }
 
     public Lookup convertToLookup(Object object) {
         Lookup root = createRoot(object);
@@ -62,6 +94,18 @@ public class ConvertorFacade {
         return lookup;
     }
 
+    private Object newObjectFromType(String type) {
+        try {
+            Class<?> rootType = Class.forName(type);
+            return rootType.newInstance();
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            throw new ConvertingException(
+                    String.format("Can't create new object from %s please make sure you have a no arguments constructor",
+                            type));
+        }
+    }
+
     private Object fetchObjectFromField(Object object, Field field, Lookup lookup) {
 
         Object obj = null;
@@ -77,6 +121,52 @@ public class ConvertorFacade {
         }
 
         return obj;
+    }
+
+    private void fillFields(Object object, Lookup root) {
+        root.getLookupMetaData().stream().forEach(m -> {
+            try {
+                Field f = object.getClass().getDeclaredField(m.getName());
+                f.setAccessible(true);
+                f = fillField(object, m.getValue(), m.getType(), f);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ConvertingException(String.format("Exception while filling the field with name = %s in the object of class = %s and value = %s",
+                        m.getName(), object.getClass().getCanonicalName(), m.getValue()));
+            }
+        });
+    }
+
+    private Field fillField(Object object, String value, String type, Field field) throws Exception {
+        if(value == null) {
+            return field;
+        } else if(type.equals(Double.class.getCanonicalName())) {
+            field.setDouble(object, Double.valueOf(value));
+        } else if(type.equals(Long.class.getCanonicalName())) {
+            field.setLong(object, Long.valueOf(value));
+        } else if(type.equalsIgnoreCase(Integer.class.getCanonicalName())) {
+            field.setInt(object, Integer.valueOf(value));
+        } else if(type.equals(Float.class.getCanonicalName())) {
+            field.setFloat(object, Float.valueOf(value));
+        } else if(type.equals(Boolean.class.getCanonicalName())) {
+            field.setBoolean(object, Boolean.valueOf(value));
+        } else if(type.equals(String.class.getCanonicalName())) {
+            field.set(object, value);
+        } else if(type.equals(BigDecimal.class.getCanonicalName())) {
+            field.set(object, BigDecimal.valueOf(Double.valueOf(value)));
+        } else if(type.equals(LocalDate.class.getCanonicalName())) {
+            field.set(object, LocalDate.parse(value));
+        } else if(type.equals(LocalDateTime.class.getCanonicalName())) {
+            field.set(object, LocalDateTime.parse(value));
+        } else if(type.equals(Character.class.getCanonicalName())) {
+            field.setChar(object, value.toCharArray()[0]);
+        } else if(Class.forName(type).isEnum()) {
+            Class<Enum> enumClazz = (Class<Enum>) Class.forName(type);
+            Enum ev = Enum.valueOf(enumClazz, value);
+            field.set(object, ev);
+        }
+
+        return field;
     }
 
     private Lookup createRoot(Object object) {
@@ -99,7 +189,11 @@ public class ConvertorFacade {
         meta.setValue(valueObj == null ? null : String.valueOf(valueObj));
         meta.setName(f.getName());
         meta.setLookup(lookup);
-        meta.setType(f.getType().getCanonicalName());
+        if(primitvesMap.containsKey(f.getType()))
+            meta.setType(primitvesMap.get(f.getType()).getCanonicalName());
+        else
+            meta.setType(f.getType().getCanonicalName());
+
         return meta;
     }
 

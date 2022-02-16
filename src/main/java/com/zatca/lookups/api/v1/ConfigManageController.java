@@ -4,6 +4,7 @@ import com.zatca.lookups.api.v1.dto.AdminConfigDTO;
 import com.zatca.lookups.api.v1.dto.TaxpayerVatDTO;
 import com.zatca.lookups.api.v1.dto.errorMessages.ErrorDTO;
 import com.zatca.lookups.convertorEngine.ConvertorFacade;
+import com.zatca.lookups.entity.Lookup;
 import com.zatca.lookups.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -87,7 +88,9 @@ public class ConfigManageController {
 
     @PutMapping("/save")
     public ResponseEntity<String> update(@Valid @RequestBody AdminConfigDTO request) {
-        System.out.println(convertor.convertToLookup(request));
+        Lookup root = convertor.convertToLookup(request);
+        AdminConfigDTO dto = convertor.convertFromLookup(root, AdminConfigDTO.class);
+
         return ResponseEntity.ok("Updated Successfully");
     }
 
