@@ -37,7 +37,7 @@ public class ConvertorFacade {
         lookup.getChilds().stream().forEach(c -> {
             try {
                 Object cObject = convertFromLookup(c, Class.forName(c.getType()));
-                Field f = object.getClass().getDeclaredField(c.getCode());
+                Field f = object.getClass().getDeclaredField(c.getFieldName());
                 f.setAccessible(true);
                 f.set(object, cObject);
             } catch (Exception e) {
@@ -73,7 +73,8 @@ public class ConvertorFacade {
         Lookup lookup = new Lookup();
         lookup.setLookupStatus(LookupStatus.ENABLED);
         lookup.setParentLookup(parent);
-        lookup.setCode(field.getName());
+        lookup.setFieldName(field.getName());
+        lookup.setCode(parent.getCode() + "-" + field.getName());
         lookup.setType(field.getType().getCanonicalName());
         lookup.setGroup(parent.getCode() + "-Group");
         lookup.setLookupMetaData(new ArrayList<>());

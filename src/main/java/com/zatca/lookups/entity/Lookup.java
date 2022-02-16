@@ -22,6 +22,9 @@ public class Lookup implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "FIELD_NAME")
+    private String fieldName;
+
     @Column(name = "GROUP_NAME")
     private String group;
 

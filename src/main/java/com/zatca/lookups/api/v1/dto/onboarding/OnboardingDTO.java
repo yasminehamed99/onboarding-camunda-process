@@ -18,7 +18,7 @@ public class OnboardingDTO {
         viewList = new ViewListDTO();
     }
 
-    private Long id;
+//    private Long id;
     @Valid
     private OtpValidityDTO otpValidity;
 

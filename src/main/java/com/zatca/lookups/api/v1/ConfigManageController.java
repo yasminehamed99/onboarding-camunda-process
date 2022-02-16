@@ -21,40 +21,13 @@ import java.util.List;
 public class ConfigManageController {
 
     @Autowired
-    private DevPortalService devPortalService;
-
-    @Autowired
-    private SmePortalService smePortalService;
-
-    @Autowired
-    private OnboardingService onboardingService;
-
-    @Autowired
-    private TaxpayerAuthService taxpayerAuthService;
-
-    @Autowired
-    private InvoiceMatchingReportsService invoiceMatchingReportsService;
-
-    @Autowired
-    private TaxpayerDataService taxpayerDataService;
-
-    @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
     private ErrorService errorService;
 
     @Autowired
-    private TaxpayerVatService taxpayerVatService;
-
-    @Autowired
-    private AdminConfigService adminConfigService;
-
-    @Autowired
-    private ClearanceStatusService clearanceStatusService;
-
-    @Autowired
     private ConvertorFacade convertor;
+
+    @Autowired
+    private LookupService lookupService;
 
     @GetMapping("/search/errorCode")
     public ResponseEntity<ErrorDTO> searchByErrorCode(@RequestHeader("Error-Code") String errorCode, @RequestHeader("Accept-Language") String language) {
@@ -73,12 +46,12 @@ public class ConfigManageController {
         return error;
     }
 
-    @PostMapping("/saveVat")
+   /* @PostMapping("/saveVat")
     public ResponseEntity<String> changeStatus(@Valid @RequestBody TaxpayerVatDTO request) {
         // TODO: get information by vat number and let user change status
         taxpayerVatService.saveVAT(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("VAT Saved Successfully");
-    }
+    }*/
 
     @PostMapping("/showPageContent")
     public void showPage(@RequestHeader("Page-Name") String pageName) {
@@ -89,12 +62,14 @@ public class ConfigManageController {
     @PutMapping("/save")
     public ResponseEntity<String> update(@Valid @RequestBody AdminConfigDTO request) {
         Lookup root = convertor.convertToLookup(request);
+
+        lookupService.updateLookups(root);
         AdminConfigDTO dto = convertor.convertFromLookup(root, AdminConfigDTO.class);
 
         return ResponseEntity.ok("Updated Successfully");
     }
 
-    @GetMapping("/save")
+    /*@GetMapping("/save")
     public ResponseEntity<AdminConfigDTO> find() {
         AdminConfigDTO dto = adminConfigService.findConfigurations();
 
@@ -112,5 +87,5 @@ public class ConfigManageController {
     public ResponseEntity<List<TaxpayerVatDTO>> getVat() {
         List<TaxpayerVatDTO> vatNumbers = taxpayerVatService.findVatNumbers();
         return ResponseEntity.ok(vatNumbers);
-    }
+    }*/
 }

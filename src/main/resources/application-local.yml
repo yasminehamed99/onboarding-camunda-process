@@ -2,7 +2,7 @@ cacheDurInDays: 10
 spring:
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://localhost:1433;databaseName=Test;useUnicode=yes;characterEncoding=UTF-8
+    url: jdbc:sqlserver://localhost:1433;databaseName=ADMIN_CONFIG_LOOKUP;useUnicode=yes;characterEncoding=UTF-8
     username: SA
     password: SAsa@123
 #    initialization-mode: embedded

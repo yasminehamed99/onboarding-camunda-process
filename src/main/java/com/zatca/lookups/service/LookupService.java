@@ -142,4 +142,18 @@ public class LookupService {
     public ResponseLookupDto findFromRootByDepth(int depth) {
         return findFromCodeByDepth(depth, "ROOT_CODE");
     }
+
+
+    public void updateLookups(Lookup requestLookup) {
+        lookupRepo.deleteAll();
+//        Lookup lookup = new Lookup();
+//        lookup.setCode(requestLookup.getCode());
+//        lookup.setLookupStatus(LookupStatus.ENABLED);
+//        lookup.setGroup(requestLookup.getGroup());
+//        lookup = lookupRepo.save(lookup);
+//        lookup.setType(requestLookup.getType());
+//        lookup.setChilds(requestLookup.getChilds());
+        lookupRepo.save(requestLookup);
+
+    }
 }
