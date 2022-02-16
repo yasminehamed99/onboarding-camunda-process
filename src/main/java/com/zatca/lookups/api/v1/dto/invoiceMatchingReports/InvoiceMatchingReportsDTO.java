@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class InvoiceMatchingReportsDTO {
 
-    private Long id;
+//    private Long id;
     @Valid
     private TwoWayClearanceDTO twoWayClearance;
     @Valid

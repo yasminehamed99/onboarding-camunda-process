@@ -16,7 +16,7 @@ public class SmePortalDTO {
         bufferedPeriodForCSIDRevocationOnceEGSIsOnboarding = new BufferPeriodCryptographicIdRevocationDTO();
     }
 
-    private Long id;
+//    private Long id;
     @Valid
     private InvoiceLimitDTO invoicesLimit;
     @Valid

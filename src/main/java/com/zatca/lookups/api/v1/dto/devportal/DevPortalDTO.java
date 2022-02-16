@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class DevPortalDTO {
 
-    private Long id;
+//    private Long id;
     @Valid
     private PasswordDTO password;
     @Valid

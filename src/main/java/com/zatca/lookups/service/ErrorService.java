@@ -1,7 +1,8 @@
 package com.zatca.lookups.service;
 
 import com.zatca.lookups.api.v1.dto.errorMessages.ErrorDTO;
-import com.zatca.lookups.entity.configuration.errorMessages.Error;
+import com.zatca.lookups.entity.ErrorMessage;
+
 import com.zatca.lookups.exception.NotFoundBusinessException;
 import com.zatca.lookups.repository.ErrorRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +18,11 @@ public class ErrorService {
 
     public ErrorDTO findErrorByCode(String errorCode) {
 
-        Error error = errorRepo.findByErrorCode(errorCode).orElseThrow(() -> new NotFoundBusinessException("Can't find error with code " + errorCode));
+        ErrorMessage errorMessage = errorRepo.findByCode(errorCode).orElseThrow(() -> new NotFoundBusinessException("Can't find error with code " + errorCode));
         ErrorDTO dto = new ErrorDTO();
-        dto.setErrorCode(error.getErrorCode());
-        dto.setErrorMessage(error.getErrorMessage());
+        dto.setCode(errorMessage.getCode());
+        dto.setMessage(errorMessage.getMessage());
+        dto.setType(errorMessage.getType());
 
         return dto;
 
