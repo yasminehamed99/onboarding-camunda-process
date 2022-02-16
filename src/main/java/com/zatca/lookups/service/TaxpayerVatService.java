@@ -1,9 +1,11 @@
 package com.zatca.lookups.service;
 
 import com.zatca.lookups.api.v1.dto.TaxpayerVatDTO;
-import com.zatca.lookups.entity.configuration.TaxpayerVat;
+import com.zatca.lookups.api.v1.response.ResponseLookupDto;
+import com.zatca.lookups.api.v1.response.ResponseLookupMetaDataDto;
+import com.zatca.lookups.entity.Lookup;
 import com.zatca.lookups.exception.NotFoundBusinessException;
-import com.zatca.lookups.repository.TaxpayerVatRepo;
+import com.zatca.lookups.repository.LookupRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,37 +18,26 @@ import java.util.List;
 public class TaxpayerVatService {
 
     @Autowired
-    private TaxpayerVatRepo taxpayerVatRepo;
+    private LookupService lookupService;
 
-    public void saveVAT(TaxpayerVatDTO request) {
-        TaxpayerVat taxpayerVat = new TaxpayerVat();
-        try {
-            taxpayerVat.setVat(request.getVat());
-            taxpayerVat.setClearanceStatus(request.getClearanceStatus());
-            taxpayerVat = taxpayerVatRepo.save(taxpayerVat);
-            log.info(taxpayerVat.toString() + "Saved successfully");
-        } catch (Exception e) {
-            log.error("TaxpayerVatService: " + e.getMessage());
-        }
+    @Autowired
+    private LookupRepo lookupRepo;
+
+
+    public void saveVatLookup(Lookup root) {
+        root.setCode("Root-clearanceStatus");
+        lookupRepo.save(root);
 
     }
 
-    public List<TaxpayerVatDTO> findVatNumbers() {
-
-        List<TaxpayerVat> vatNumbers = null;
-        try {
-
-            vatNumbers =  taxpayerVatRepo.findAll();
-        } catch (Exception e) {
-            throw new NotFoundBusinessException("No VAT Numbers found");
+    public String getClearanceStatus(String code, String vat) {
+        ResponseLookupDto lookup = lookupService.findFromCodeByDepth(0, code);
+        String status = null;
+        for (ResponseLookupMetaDataDto meta : lookup.getMetaData()) {
+            if (meta.getName().equals(vat)) {
+                status = meta.getValue();
+            }
         }
-        List<TaxpayerVatDTO> vatDTOS = new ArrayList<>();
-        for (TaxpayerVat v: vatNumbers) {
-            TaxpayerVatDTO dto = new TaxpayerVatDTO();
-            dto.setVat(v.getVat());
-            dto.setClearanceStatus(v.getClearanceStatus());
-            vatDTOS.add(dto);
-        }
-        return vatDTOS;
+        return status;
     }
 }

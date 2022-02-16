@@ -15,16 +15,7 @@ public class NotificationInfoDTO {
     @NotNull(message = "Reminders can't be null")
     private List<Reminder> reminders;
 
-    public List<Reminder> addReminders(List<com.zatca.lookups.entity.configuration.notification.Reminder> reminderList) {
-        List<Reminder> temp = new ArrayList<>();
-        for(com.zatca.lookups.entity.configuration.notification.Reminder reminder : reminderList) {
-            Reminder tempReminder = new Reminder();
-            tempReminder.setValue(reminder.getValue());
-            tempReminder.setTimePeriod(reminder.getTimePeriod());
-            temp.add(tempReminder);
-        }
-        return temp;
-    }
+
 
 
 }

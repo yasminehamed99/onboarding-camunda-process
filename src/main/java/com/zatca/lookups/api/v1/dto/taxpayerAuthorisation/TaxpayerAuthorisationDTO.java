@@ -13,7 +13,7 @@ public class TaxpayerAuthorisationDTO {
         smePortal = new PortalDTO();
     }
 
-    private Long id;
+//    private Long id;
     @Valid
     @JsonProperty("eInvoicesPortal")
     private PortalDTO eInvoicesPortal;

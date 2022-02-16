@@ -29,6 +29,9 @@ public class LookupMetaData implements Serializable {
     @Column(name = "Value", nullable = false)
     private String value;
 
+    @Column(name = "JavaType")
+    private String type;
+
     @ManyToOne
     @JoinColumn(name = "lookupId", referencedColumnName = "Id")
     private Lookup lookup;

@@ -22,17 +22,17 @@ public class Lookup implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "FIELD_NAME")
+    private String fieldName;
+
     @Column(name = "GROUP_NAME")
     private String group;
 
-    @Column(name = "TITLE_EN")
-    private String titleEn;
-
-    @Column(name = "TITLE_AR")
-    private String titleAr;
-
     @Column(name = "CODE", unique = true)
     private String code;
+
+    @Column(name = "JavaType")
+    private String type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "REF_ID")
@@ -48,13 +48,6 @@ public class Lookup implements Serializable {
     @OneToMany(mappedBy = "lookup", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<LookupMetaData> lookupMetaData;
 
-    public String labelByLocal(Locale locale) {
-        if (locale.toString().contains("en"))
-            return this.titleEn;
-        else
-            return this.titleAr;
-    }
-
     public ResponseLookupDto convertToDto(int depth) {
 
         long parentLookupId = 0;
@@ -66,7 +59,7 @@ public class Lookup implements Serializable {
             metaDataDtoList = lookupMetaData.parallelStream().map(LookupMetaData::convertToDto).collect(Collectors.toList());
         }
 
-        ResponseLookupDto dto = new ResponseLookupDto(this.id, this.group, this.titleAr, this.titleEn, this.code,
+        ResponseLookupDto dto = new ResponseLookupDto(this.id, this.group, this.code,
                 parentLookupId, null, metaDataDtoList);
 
         if (depth > 0) {
@@ -74,5 +67,14 @@ public class Lookup implements Serializable {
         }
 
         return dto;
+    }
+
+    @Override
+    public String toString() {
+        return "Lookup{" +
+                "group='" + group + '\'' +
+                ", code='" + code + '\'' +
+                ", lookupStatus=" + lookupStatus +
+                '}';
     }
 }

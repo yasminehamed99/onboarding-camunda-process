@@ -27,8 +27,6 @@ public class LookupService {
         Lookup lookup = new Lookup();
         lookup.setCode("ROOT_CODE");
         lookup.setGroup("ROOT_GROUP");
-        lookup.setTitleEn("ROOT_TITLE_EN");
-        lookup.setTitleAr("ROOT_TITLE_AR");
         lookup.setLookupStatus(LookupStatus.ENABLED);
 
         lookupRepo.save(lookup);
@@ -56,8 +54,6 @@ public class LookupService {
         lookup.setLookupStatus(LookupStatus.ENABLED);
         lookup.setParentLookup(parentLookup);
         lookup.setCode(requestLookupDto.getCode());
-        lookup.setTitleAr(requestLookupDto.getTitleAr());
-        lookup.setTitleEn(requestLookupDto.getTitleEn());
 
         metaDataRepo.deleteAllByLookupId(lookup.getId());
 
@@ -116,8 +112,6 @@ public class LookupService {
         Lookup lookup = new Lookup();
         lookup.setParentLookup(parentLookup);
         lookup.setCode(requestLookupDto.getCode());
-        lookup.setTitleAr(requestLookupDto.getTitleAr());
-        lookup.setTitleEn(requestLookupDto.getTitleEn());
         lookup.setLookupStatus(LookupStatus.ENABLED);
         lookup.setGroup(requestLookupDto.getGroup());
 
@@ -147,5 +141,17 @@ public class LookupService {
 
     public ResponseLookupDto findFromRootByDepth(int depth) {
         return findFromCodeByDepth(depth, "ROOT_CODE");
+    }
+
+
+    public void updateLookups(Lookup requestLookup) {
+        lookupRepo.deleteAll();
+
+        lookupRepo.save(requestLookup);
+
+    }
+
+    public Lookup getLookup() {
+        return lookupRepo.findAll().get(0);
     }
 }
