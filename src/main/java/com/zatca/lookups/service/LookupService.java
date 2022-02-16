@@ -146,14 +146,12 @@ public class LookupService {
 
     public void updateLookups(Lookup requestLookup) {
         lookupRepo.deleteAll();
-//        Lookup lookup = new Lookup();
-//        lookup.setCode(requestLookup.getCode());
-//        lookup.setLookupStatus(LookupStatus.ENABLED);
-//        lookup.setGroup(requestLookup.getGroup());
-//        lookup = lookupRepo.save(lookup);
-//        lookup.setType(requestLookup.getType());
-//        lookup.setChilds(requestLookup.getChilds());
+
         lookupRepo.save(requestLookup);
 
+    }
+
+    public Lookup getLookup() {
+        return lookupRepo.findAll().get(0);
     }
 }
