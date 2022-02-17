@@ -60,7 +60,7 @@ public class Lookup implements Serializable {
         }
 
         ResponseLookupDto dto = new ResponseLookupDto(this.id, this.group, this.code,
-                parentLookupId, null, metaDataDtoList);
+                parentLookupId, null, this.lookupMetaData.stream().collect(Collectors.toMap(LookupMetaData::getName, LookupMetaData::getValue)));
 
         if (depth > 0) {
             dto.setChilds(this.childs.stream().map(c -> c.convertToDto(depth - 1)).collect(Collectors.toList()));

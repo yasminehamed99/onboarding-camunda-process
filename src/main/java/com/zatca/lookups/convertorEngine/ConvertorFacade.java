@@ -48,8 +48,8 @@ public class ConvertorFacade {
         return object;
     }
 
-    public Lookup convertToLookup(Object object) {
-        Lookup root = createRoot(object);
+    public Lookup convertToLookup(Object object, String rootGroup, String rootCode) {
+        Lookup root = createRoot(object, rootGroup, rootCode);
 
         Class clazz = object.getClass();
 
@@ -170,10 +170,10 @@ public class ConvertorFacade {
         return field;
     }
 
-    private Lookup createRoot(Object object) {
+    private Lookup createRoot(Object object, String rootGroup, String rootCode) {
         Lookup root = new Lookup();
-        root.setGroup("Root");
-        root.setCode("Root");
+        root.setGroup(rootGroup);
+        root.setCode(rootCode);
         root.setLookupStatus(LookupStatus.ENABLED);
         root.setType(object.getClass().getCanonicalName());
         root.setLookupMetaData(new ArrayList<>());

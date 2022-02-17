@@ -1,9 +1,14 @@
 package com.zatca.lookups.api.v1;
 
+import com.zatca.lookups.api.v1.dto.AdminConfigDTO;
+import com.zatca.lookups.api.v1.dto.ClearanceStatusDTO;
 import com.zatca.lookups.api.v1.request.RequestLookupDto;
 import com.zatca.lookups.api.v1.response.ResponseLookupDto;
+import com.zatca.lookups.convertorEngine.ConvertorFacade;
+import com.zatca.lookups.entity.Lookup;
 import com.zatca.lookups.service.LookupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +24,21 @@ public class LookupController {
 
     @Autowired
     private LookupService lookupService;
+
+    @Autowired
+    private ConvertorFacade convertor;
+
+    @Value("${root.admin.config.code}")
+    private String adminConfigRootCode;
+
+    @Value("${root.admin.config.group}")
+    private String adminConfigRootGroup;
+
+    @Value("${root.clearance.config.code}")
+    private String clearanceConfigRootCode;
+
+    @Value("${root.clearance.config.group}")
+    private String clearanceConfigRootGroup;
 
     @GetMapping("rootLookupByDepth")
     public ResponseEntity<ResponseLookupDto> findRoot(int depth) {
@@ -46,7 +66,7 @@ public class LookupController {
 
     @PostMapping("rootLookup")
     public ResponseEntity<String> createRootLookup() {
-        lookupService.createRoot();
+        lookupService.createRoot("Root", "Root-Group");
 
         return ResponseEntity.status(HttpStatus.CREATED).body("New lookup saved successfully");
     }
@@ -78,4 +98,41 @@ public class LookupController {
         return ResponseEntity.status(HttpStatus.OK).body("Lookup with code = " + code + " " +
                 "has been deleted successfully");
     }
+
+    @GetMapping("/getMetaData")
+    public ResponseEntity<String> getMetaData(@Valid  @NotBlank(message = "Lookup code can't be null or empty") String lookupCode,
+                                              @Valid  @NotBlank(message = "Meta Data name can't be null or empty") String metaName) {
+        String metaDataValue = lookupService.getMetaData(lookupCode, metaName);
+        if (metaDataValue == null || metaDataValue.isEmpty()) {
+            return ResponseEntity.badRequest().body(metaName + " code not found");
+        }
+        return ResponseEntity.ok(metaDataValue);
+    }
+
+    @PutMapping("/save")
+    public ResponseEntity<String> update(@Valid @RequestBody AdminConfigDTO request) {
+        Lookup root = convertor.convertToLookup(request, adminConfigRootGroup, adminConfigRootCode);
+
+        lookupService.updateLookups(root);
+
+        return ResponseEntity.ok("Updated Successfully");
+    }
+
+    @GetMapping("/save")
+    public ResponseEntity<AdminConfigDTO> get() {
+
+        Lookup root = lookupService.getLookup();
+        AdminConfigDTO dto = convertor.convertFromLookup(root, AdminConfigDTO.class);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping("/saveStatus")
+    public ResponseEntity<String> saveStatus(@RequestBody ClearanceStatusDTO request) {
+
+        Lookup root = convertor.convertToLookup(request, clearanceConfigRootGroup, clearanceConfigRootCode);
+        lookupService.updateLookups(root);
+        return ResponseEntity.ok("Saved");
+    }
+
+
 }
