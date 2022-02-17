@@ -12,3 +12,4 @@ spring:
 server:
   servlet:
     context-path: /adminConfig
+  port: 8899

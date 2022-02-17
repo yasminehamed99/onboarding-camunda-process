@@ -8,7 +8,17 @@ spring:
 #    initialization-mode: embedded
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+root:
+  admin:
+    config:
+      code: Root-Admin-Config
+      group: Root-Admin-Config-Group
+  clearance:
+    config:
+      code: Root-Clearance-Config
+      group: Root-Clearance-Config-Group

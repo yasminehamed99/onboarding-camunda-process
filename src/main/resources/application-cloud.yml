@@ -23,3 +23,13 @@ spring:
 server:
   port: ${SERVER_PORT:8080}
 
+root:
+  admin:
+    config:
+      code: ${ROOT_ADMIN_CONFIG} # Root-Admin-Config
+      group: ${ROOT_ADMIN_CONFIG_GROUP} # Root-Admin-Config-Group
+  clearance:
+    config:
+      code: ${ROOT-CLEARANCE-CONFIG} # Root-Clearance-Config
+      group: ${ROOT-CLEARANCE-CONFIG-GROUP} # Root-Clearance-Config-Group
+

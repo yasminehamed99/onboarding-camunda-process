@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -20,5 +21,5 @@ public class ResponseLookupDto {
 
     private List<ResponseLookupDto> childs;
 
-    private List<ResponseLookupMetaDataDto> metaData;
+    private Map<String, String> metaDataMap;
 }
