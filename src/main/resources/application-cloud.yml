@@ -30,6 +30,6 @@ root:
       group: ${ROOT_ADMIN_CONFIG_GROUP} # Root-Admin-Config-Group
   clearance:
     config:
-      code: ${ROOT-CLEARANCE-CONFIG} # Root-Clearance-Config
-      group: ${ROOT-CLEARANCE-CONFIG-GROUP} # Root-Clearance-Config-Group
+      code: ${ROOT_CLEARANCE_CONFIG} # Root-Clearance-Config
+      group: ${ROOT_CLEARANCE_CONFIG_GROUP} # Root-Clearance-Config-Group
 
