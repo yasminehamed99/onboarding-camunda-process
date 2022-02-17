@@ -140,7 +140,7 @@ public class LookupService {
     }
 
     public ResponseLookupDto findFromRootByDepth(int depth) {
-        return findFromCodeByDepth(depth, "ROOT_CODE");
+        return findFromCodeByDepth(depth, "Root");
     }
 
 

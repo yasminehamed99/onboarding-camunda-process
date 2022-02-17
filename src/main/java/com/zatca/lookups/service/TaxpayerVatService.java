@@ -33,10 +33,9 @@ public class TaxpayerVatService {
     public String getClearanceStatus(String code, String vat) {
         ResponseLookupDto lookup = lookupService.findFromCodeByDepth(0, code);
         String status = null;
-        for (ResponseLookupMetaDataDto meta : lookup.getMetaData()) {
-            if (meta.getName().equals(vat)) {
-                status = meta.getValue();
-            }
+
+        if (lookup.getMetaDataMap().containsKey(vat)) {
+            status = lookup.getMetaDataMap().get(vat);
         }
         return status;
     }
