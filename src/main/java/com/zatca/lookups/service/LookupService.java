@@ -9,9 +9,11 @@ import com.zatca.lookups.exception.NotFoundBusinessException;
 import com.zatca.lookups.repository.LookupRepo;
 import com.zatca.lookups.repository.MetaDataRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,10 +25,16 @@ public class LookupService {
     @Autowired
     private MetaDataRepo metaDataRepo;
 
-    public void createRoot() {
+    @Value("${root.admin.config.code}")
+    private String adminConfigRootCode;
+
+    @Value("${root.clearance.config.code}")
+    private String clearanceConfigRootCode;
+
+    public void createRoot(String code, String group) {
         Lookup lookup = new Lookup();
-        lookup.setCode("ROOT_CODE");
-        lookup.setGroup("ROOT_GROUP");
+        lookup.setCode(code);
+        lookup.setGroup(group);
         lookup.setLookupStatus(LookupStatus.ENABLED);
 
         lookupRepo.save(lookup);
@@ -145,7 +153,10 @@ public class LookupService {
 
 
     public void updateLookups(Lookup requestLookup) {
-        lookupRepo.deleteAll();
+//        lookupRepo.deleteAll();
+
+        Lookup lookup = lookupRepo.findByCode(requestLookup.getCode()).get();
+        lookupRepo.delete(lookup);
 
         lookupRepo.save(requestLookup);
 
@@ -154,4 +165,18 @@ public class LookupService {
     public Lookup getLookup() {
         return lookupRepo.findAll().get(0);
     }
+
+    public String getMetaData(String lookupCode, String metaCode) {
+
+        ResponseLookupDto lookupDto = findFromCodeByDepth(0, lookupCode);
+        Map<String, String> metaDataDto = lookupDto.getMetaDataMap();
+        if (metaDataDto.containsKey(metaCode)) {
+            return metaDataDto.get(metaCode);
+        }
+        return null;
+    }
+
+
+
+
 }
