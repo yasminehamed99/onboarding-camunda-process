@@ -6,8 +6,12 @@ import com.zatca.lookups.entity.ErrorMessage;
 import com.zatca.lookups.exception.NotFoundBusinessException;
 import com.zatca.lookups.repository.ErrorRepo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,6 +29,26 @@ public class ErrorService {
         dto.setType(errorMessage.getType());
 
         return dto;
+
+    }
+
+    public List<ErrorDTO> findErrorByKeyword(String keyword) {
+        List<ErrorMessage> errors = errorRepo.findByMessageContains(keyword);
+
+        if (errors == null || errors.isEmpty()) {
+            throw new NotFoundBusinessException("No Error Message Found for keyword: " + keyword);
+        }
+
+        List<ErrorDTO> errorDTOS = new ArrayList<>();
+        for (ErrorMessage error : errors) {
+            ErrorDTO temp = new ErrorDTO();
+            temp.setType(error.getType());
+            temp.setCode(error.getCode());
+            temp.setMessage(error.getMessage());
+            errorDTOS.add(temp);
+        }
+
+        return errorDTOS;
 
     }
 }

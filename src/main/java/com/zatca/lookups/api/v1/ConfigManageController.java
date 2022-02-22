@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/lookups/v1")
@@ -27,23 +28,16 @@ public class ConfigManageController {
     @GetMapping("/search/errorCode")
     public ResponseEntity<ErrorDTO> searchByErrorCode(@RequestHeader("Error-Code") String errorCode, @RequestHeader("Accept-Language") String language) {
 
-        // TODO: get error by code
         ErrorDTO error = errorService.findErrorByCode(errorCode);
 
         return ResponseEntity.ok(error);
     }
 
     @GetMapping("/search/keyword")
-    public ErrorDTO searchByKeyword(@RequestHeader("Keyword") String keyword, @RequestHeader("Accept-Language") String language) {
+    public List<ErrorDTO> searchByKeyword(String keyword, @RequestHeader(value = "Accept-Language", required = false) String language) {
 
-        ErrorDTO error = new ErrorDTO();
-        // TODO: get error by keyword
-        return error;
+        return errorService.findErrorByKeyword(keyword);
     }
-
-
-
-
 
 
 

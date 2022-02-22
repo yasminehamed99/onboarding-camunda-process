@@ -6,6 +6,7 @@ import com.zatca.lookups.repository.ErrorRepo;
 import com.zatca.lookups.repository.LookupRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -35,6 +36,9 @@ public class LookupsApplication {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	@Value("${root.admin.config.code}")
+	private String adminConfigRootCode;
+
 	public static void main(String[] args) {
 		SpringApplication.run(LookupsApplication.class, args);
 	}
@@ -44,7 +48,7 @@ public class LookupsApplication {
 	CommandLineRunner runner() throws IOException {
 
 		List<ErrorMessage> errorMessages = errorRepo.findAll();
-		Optional<Lookup> root = lookupRepo.findByCode("Root-Admin-Config");
+		Optional<Lookup> root = lookupRepo.findByCode(adminConfigRootCode);
 		if (ObjectUtils.isEmpty(root)) {
 			File file = new File("/resources/data.sql");
 			String insertStatements= new String(Files.readAllBytes(file.toPath()));

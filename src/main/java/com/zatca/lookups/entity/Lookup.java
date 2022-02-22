@@ -34,6 +34,9 @@ public class Lookup implements Serializable {
     @Column(name = "JavaType")
     private String type;
 
+    @Column(name = "IS_LIST")
+    private Boolean isList;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "REF_ID")
     @JsonBackReference
