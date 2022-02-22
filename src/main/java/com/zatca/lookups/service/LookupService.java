@@ -176,6 +176,14 @@ public class LookupService {
         return null;
     }
 
+    public Lookup findByRoot(String rootCode) {
+        try {
+            return lookupRepo.findByCode(rootCode).get();
+        } catch (Exception e) {
+            throw new NotFoundBusinessException("Lookup with root " + rootCode + " not found");
+        }
+    }
+
 
 
 
