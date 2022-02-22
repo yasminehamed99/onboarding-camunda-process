@@ -6,6 +6,7 @@ import com.zatca.lookups.api.v1.request.RequestLookupDto;
 import com.zatca.lookups.api.v1.response.ResponseLookupDto;
 import com.zatca.lookups.convertorEngine.ConvertorFacade;
 import com.zatca.lookups.entity.Lookup;
+import com.zatca.lookups.repository.LookupRepo;
 import com.zatca.lookups.service.LookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +40,9 @@ public class LookupController {
 
     @Value("${root.clearance.config.group}")
     private String clearanceConfigRootGroup;
+
+    @Autowired
+    private LookupRepo lookupRepo;
 
     @GetMapping("rootLookupByDepth")
     public ResponseEntity<ResponseLookupDto> findRoot(int depth) {
@@ -121,7 +125,8 @@ public class LookupController {
     @GetMapping("/save")
     public ResponseEntity<AdminConfigDTO> get() {
 
-        Lookup root = lookupService.getLookup();
+//        Lookup root = lookupService.getLookup();
+        Lookup root = lookupRepo.findByCode("Root-Admin-Config").get();
         AdminConfigDTO dto = convertor.convertFromLookup(root, AdminConfigDTO.class);
         return ResponseEntity.ok(dto);
     }
