@@ -3,18 +3,28 @@ package com.zatca.lookups.convertorEngine;
 import com.zatca.lookups.entity.Lookup;
 import com.zatca.lookups.entity.LookupMetaData;
 import com.zatca.lookups.entity.LookupStatus;
+import com.zatca.lookups.repository.LookupRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class ConvertorFacade {
 
+    @Autowired
+    private LookupRepo lookupRepo;
+
+    private int counter = 1;
     private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
+    private Set<String> lookupCollectionsSet = new HashSet<>();
     public final static Map<Class<?>, Class<?>> primitvesMap = new HashMap<Class<?>, Class<?>>();
     static {
         primitvesMap.put(boolean.class, Boolean.class);
@@ -36,10 +46,25 @@ public class ConvertorFacade {
 
         lookup.getChilds().stream().forEach(c -> {
             try {
-                Object cObject = convertFromLookup(c, Class.forName(c.getType()));
                 Field f = object.getClass().getDeclaredField(c.getFieldName());
                 f.setAccessible(true);
-                f.set(object, cObject);
+                String code = c.getParentLookup().getCode() + "-" + c.getFieldName();
+                if(c.getIsList() && !lookupCollectionsSet.contains(code)) {
+                    List<Lookup> lookupList = lookupRepo.findByCodeContains(code);
+                    List list = lookupList.stream().map(cx -> {
+                        try {
+                            return convertFromLookup(cx, Class.forName(cx.getType()));
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }).collect(Collectors.toList());
+                    lookupCollectionsSet.add(code);
+                    f.set(object, list);
+                } else {
+                    Object cObject = convertFromLookup(c, Class.forName(c.getType()));
+                    f.set(object, cObject);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -49,6 +74,9 @@ public class ConvertorFacade {
     }
 
     public Lookup convertToLookup(Object object, String rootGroup, String rootCode) {
+        counter = 0;
+        lookupCollectionsSet = new HashSet<>();
+
         Lookup root = createRoot(object, rootGroup, rootCode);
 
         Class clazz = object.getClass();
@@ -62,25 +90,48 @@ public class ConvertorFacade {
             if(isPrimitiveType(field.getType())) {
                 root.getLookupMetaData().add(createMeta(field, fieldObj, root));
             } else {
-                root.getChilds().add(convertToLookup(root, field, fieldObj));
+                boolean isObjList = field.getType().getCanonicalName().equals("java.util.List");
+                if (isObjList) {
+                    List list = (List) fieldObj;
+                    list.stream().forEach(fobject -> root.getChilds().add(convertToLookup(root, field, fobject, true)));
+                } else {
+                    root.getChilds().add(convertToLookup(root, field, fieldObj, false));
+                }
             }
         });
 
         return root;
     }
 
-    private Lookup convertToLookup(Lookup parent, Field field, Object object) {
+    private Lookup convertToLookup(Lookup parent, Field field, Object object, boolean isList) {
+
         Lookup lookup = new Lookup();
         lookup.setLookupStatus(LookupStatus.ENABLED);
         lookup.setParentLookup(parent);
         lookup.setFieldName(field.getName());
-        lookup.setCode(parent.getCode() + "-" + field.getName());
-        lookup.setType(field.getType().getCanonicalName());
+
+        Field[] fields = null;
+        if(isList) {
+            try {
+                fields = Class.forName(((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0].getTypeName()).getDeclaredFields();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            lookup.setCode(parent.getCode() + "-" + field.getName() + counter++);
+            lookup.setType(((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0].getTypeName());
+        } else {
+            fields = field.getType().getDeclaredFields();
+            lookup.setCode(parent.getCode() + "-" + field.getName());
+            lookup.setType(field.getType().getCanonicalName());
+        }
+
         lookup.setGroup(parent.getCode() + "-Group");
         lookup.setLookupMetaData(new ArrayList<>());
         lookup.setChilds(new ArrayList<>());
+        lookup.setIsList(isList);
 
-        Arrays.stream(field.getType().getDeclaredFields()).forEach(f -> {
+        Arrays.stream(fields).forEach(f -> {
 
             f.setAccessible(true);
             Object fieldObject = fetchObjectFromField(object, f, lookup);
@@ -88,7 +139,14 @@ public class ConvertorFacade {
             if(isPrimitiveType(f.getType())) {
                 lookup.getLookupMetaData().add(createMeta(f, fieldObject, lookup));
             } else {
-                lookup.getChilds().add(convertToLookup(lookup, f, fieldObject));
+                boolean isObjList = f.getType().getCanonicalName().equals("java.util.List");
+                if (isObjList) {
+                    List list = (List) fieldObject;
+                    list.stream().forEach(fieldObj -> lookup.getChilds().add(convertToLookup(lookup, f, fieldObj, true)));
+                    System.out.println(lookup);
+                } else {
+                    lookup.getChilds().add(convertToLookup(lookup, f, fieldObject, false));
+                }
             }
         });
 

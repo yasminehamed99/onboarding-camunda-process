@@ -41,6 +41,7 @@ public class LookupController {
     @Value("${root.clearance.config.group}")
     private String clearanceConfigRootGroup;
 
+
     @Autowired
     private LookupRepo lookupRepo;
 
@@ -126,7 +127,7 @@ public class LookupController {
     public ResponseEntity<AdminConfigDTO> get() {
 
 //        Lookup root = lookupService.getLookup();
-        Lookup root = lookupRepo.findByCode("Root-Admin-Config").get();
+        Lookup root = lookupRepo.findByCode(adminConfigRootCode).get();
         AdminConfigDTO dto = convertor.convertFromLookup(root, AdminConfigDTO.class);
         return ResponseEntity.ok(dto);
     }

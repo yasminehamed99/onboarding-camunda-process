@@ -15,4 +15,6 @@ public interface LookupRepo extends JpaRepository<Lookup, Long> {
     boolean existsByCode(String code);
 
     Optional<Lookup> findByCode(String root);
+
+    List<Lookup> findByCodeContains(String code);
 }
