@@ -22,3 +22,8 @@ root:
     config:
       code: Root-Clearance-Config
       group: Root-Clearance-Config-Group
+
+devPortal:
+  url: http://localhost:8098/users/update-configs
+  timeConfig:
+    url: http://localhost:8098/users/update-time-configs
