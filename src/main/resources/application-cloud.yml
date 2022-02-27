@@ -26,10 +26,15 @@ server:
 root:
   admin:
     config:
-      code: ${ROOT_ADMIN_CONFIG} # Root-Admin-Config
-      group: ${ROOT_ADMIN_CONFIG_GROUP} # Root-Admin-Config-Group
+      code: ${ROOT_ADMIN_CONFIG}
+      group: ${ROOT_ADMIN_CONFIG_GROUP}
   clearance:
     config:
-      code: ${ROOT_CLEARANCE_CONFIG} # Root-Clearance-Config
-      group: ${ROOT_CLEARANCE_CONFIG_GROUP} # Root-Clearance-Config-Group
+      code: ${ROOT_CLEARANCE_CONFIG}
+      group: ${ROOT_CLEARANCE_CONFIG_GROUP}
+
+devPortal:
+  url: ${DEVPORTAL_UPDATE_CONFIGS_URL}
+  timeConfig:
+    url: ${DEVPORTAL_UPDATE_TIME_CONFIGS_URL}
 
