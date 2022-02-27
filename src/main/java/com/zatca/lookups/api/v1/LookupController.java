@@ -7,8 +7,10 @@ import com.zatca.lookups.api.v1.response.ResponseLookupDto;
 import com.zatca.lookups.convertorEngine.ConvertorFacade;
 import com.zatca.lookups.entity.Lookup;
 import com.zatca.lookups.repository.LookupRepo;
+import com.zatca.lookups.service.Intercept.LookupInterceptor;
 import com.zatca.lookups.service.LookupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,14 @@ public class LookupController {
 
     @Autowired
     private ConvertorFacade convertor;
+
+    @Autowired
+    @Qualifier("AccountLockoutTimeConfig")
+    private LookupInterceptor timeLookupInterceptor;
+
+    @Autowired
+    @Qualifier("LockoutConfig")
+    private LookupInterceptor lookupInterceptor;
 
     @Value("${root.admin.config.code}")
     private String adminConfigRootCode;
@@ -118,7 +128,10 @@ public class LookupController {
     public ResponseEntity<String> update(@Valid @RequestBody AdminConfigDTO request) {
         Lookup root = convertor.convertToLookup(request, adminConfigRootGroup, adminConfigRootCode);
 
+        lookupInterceptor.intercept(root);
+        timeLookupInterceptor.intercept(root);
         lookupService.updateLookups(root);
+
 
         return ResponseEntity.ok("Updated Successfully");
     }

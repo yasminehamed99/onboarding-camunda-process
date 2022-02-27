@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,5 +60,8 @@ public class LookupsApplication {
 			log.info("Command Line Runner Executed");
 		};
 	}
+
+	@Bean
+	RestTemplate restTemplate() {return new RestTemplate();}
 
 }
