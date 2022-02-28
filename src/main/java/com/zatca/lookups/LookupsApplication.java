@@ -56,6 +56,12 @@ public class LookupsApplication {
 			jdbcTemplate.execute(insertStatements);
 		}
 
+		if (ObjectUtils.isEmpty(errorMessages)) {
+			File file = new File("/resources/messagesData.sql");
+			String insertStatements= new String(Files.readAllBytes(file.toPath()));
+			jdbcTemplate.execute(insertStatements);
+		}
+
 		return args -> {
 			log.info("Command Line Runner Executed");
 		};
