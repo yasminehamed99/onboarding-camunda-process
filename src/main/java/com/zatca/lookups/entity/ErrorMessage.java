@@ -15,8 +15,11 @@ public class ErrorMessage {
     @Column(name = "code")
     private String code;
 
-    @Column(name = "message", columnDefinition = "VARCHAR(max)")
+    @Column(name = "message", columnDefinition = "NVARCHAR(max)")
     private String message;
+
+    @Column(name = "message_ar", columnDefinition = "NVARCHAR(max)")
+    private String arabicMessage;
 
     @Column(name = "type")
     private String type;
