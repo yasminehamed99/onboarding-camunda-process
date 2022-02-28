@@ -6,5 +6,6 @@ import lombok.Data;
 public class ErrorDTO {
     private String code;
     private String message;
+    private String arabicMessage;
     private String type;
 }

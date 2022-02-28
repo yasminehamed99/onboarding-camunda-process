@@ -27,6 +27,7 @@ public class ErrorService {
         dto.setCode(errorMessage.getCode());
         dto.setMessage(errorMessage.getMessage());
         dto.setType(errorMessage.getType());
+        dto.setArabicMessage(errorMessage.getArabicMessage());
 
         return dto;
 
@@ -45,6 +46,7 @@ public class ErrorService {
             temp.setType(error.getType());
             temp.setCode(error.getCode());
             temp.setMessage(error.getMessage());
+            temp.setArabicMessage(error.getArabicMessage());
             errorDTOS.add(temp);
         }
 
