@@ -1,12 +1,24 @@
 package com.zatca.lookups.entity;
 
+import com.zatca.lookups.api.v1.dto.errorMessages.ErrorDTO;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class ErrorMessage {
+
+    public ErrorMessage(ErrorDTO dto) {
+
+        this.code = dto.getCode();
+        this.message = dto.getMessage();
+        this.arabicMessage = dto.getArabicMessage();
+        this.type = dto.getType();
+
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
