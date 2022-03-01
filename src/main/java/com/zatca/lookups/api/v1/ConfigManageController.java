@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -31,5 +32,24 @@ public class ConfigManageController {
         List<ErrorDTO> errors = errorService.findErrorByCodeAndMessage(errorCode, keyword);
 
         return ResponseEntity.ok(errors);
+    }
+
+    @PutMapping("/search/errorCodeKeyWord")
+    public ResponseEntity<String> updateErrorMessages(@RequestBody List<ErrorDTO> errors) {
+
+        errorService.updateErrorMessage(errors);
+
+        return ResponseEntity.ok("Updated Successfully");
+    }
+
+    @PutMapping("/search/errorCodeKeyWordSingle")
+    public ResponseEntity<String> updateErrorMessage(@RequestBody ErrorDTO error) {
+
+        List<ErrorDTO> errors = new ArrayList<>();
+        errors.add(error);
+
+        errorService.updateErrorMessage(errors);
+
+        return ResponseEntity.ok("Updated Successfully");
     }
 }
