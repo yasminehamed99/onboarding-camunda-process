@@ -3,15 +3,15 @@ package com.zatca.lookups.service;
 import com.zatca.lookups.api.v1.dto.errorMessages.ErrorDTO;
 import com.zatca.lookups.entity.ErrorMessage;
 
-import com.zatca.lookups.exception.NotFoundBusinessException;
 import com.zatca.lookups.repository.ErrorRepo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -20,37 +20,25 @@ public class ErrorService {
     @Autowired
     private ErrorRepo errorRepo;
 
-    public ErrorDTO findErrorByCode(String errorCode) {
+    public List<ErrorDTO> findErrorByCodeAndMessage(String errorCode, String message) {
 
-        ErrorMessage errorMessage = errorRepo.findByCode(errorCode).orElseThrow(() -> new NotFoundBusinessException("Can't find error with code " + errorCode));
-        ErrorDTO dto = new ErrorDTO();
-        dto.setCode(errorMessage.getCode());
-        dto.setMessage(errorMessage.getMessage());
-        dto.setType(errorMessage.getType());
-        dto.setArabicMessage(errorMessage.getArabicMessage());
+        List<ErrorMessage> errorMessages = errorRepo.findByCodeContainsAndArabicMessageContainsAndMessageContains(errorCode, message, message);
 
-        return dto;
+        return errorMessages.stream().map(e -> new ErrorDTO(e.getCode(), e.getMessage(), e.getArabicMessage(), e.getType())).collect(Collectors.toList());
 
     }
 
-    public List<ErrorDTO> findErrorByKeyword(String keyword) {
-        List<ErrorMessage> errors = errorRepo.findByMessageContains(keyword);
+    public void updateErrorMessage(List<ErrorDTO> errors) {
 
-        if (errors == null || errors.isEmpty()) {
-            throw new NotFoundBusinessException("No Error Message Found for keyword: " + keyword);
-        }
+        Map<String, ErrorDTO> codeErrorMap = errors.stream().collect(Collectors.toMap(ErrorDTO::getCode, e -> e));
 
-        List<ErrorDTO> errorDTOS = new ArrayList<>();
-        for (ErrorMessage error : errors) {
-            ErrorDTO temp = new ErrorDTO();
-            temp.setType(error.getType());
-            temp.setCode(error.getCode());
-            temp.setMessage(error.getMessage());
-            temp.setArabicMessage(error.getArabicMessage());
-            errorDTOS.add(temp);
-        }
+        List<ErrorMessage> oldErrors = errorRepo.findAllByCodeIn(errors.stream().map(ErrorDTO::getCode).collect(Collectors.toList()));
 
-        return errorDTOS;
+        oldErrors.stream().forEach(e -> {
+            e.setMessage(codeErrorMap.get(e.getCode()).getMessage());
+            e.setArabicMessage(codeErrorMap.get(e.getCode()).getArabicMessage());
+            errorRepo.save(e);
+        });
 
     }
 }

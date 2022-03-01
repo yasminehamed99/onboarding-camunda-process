@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,24 +26,30 @@ public class ConfigManageController {
     @Autowired
     private LookupService lookupService;
 
-    @GetMapping("/search/errorCode")
-    public ResponseEntity<ErrorDTO> searchByErrorCode(@RequestHeader("Error-Code") String errorCode, @RequestHeader("Accept-Language") String language) {
+    @GetMapping("/search/errorCodeKeyWord")
+    public ResponseEntity<List<ErrorDTO>> searchByErrorCodeKeyWord(@RequestParam("errorCode") String errorCode, @RequestParam("keyword") String keyword) {
 
-        ErrorDTO error = errorService.findErrorByCode(errorCode);
+        List<ErrorDTO> errors = errorService.findErrorByCodeAndMessage(errorCode, keyword);
 
-        return ResponseEntity.ok(error);
+        return ResponseEntity.ok(errors);
     }
 
-    @GetMapping("/search/keyword")
-    public List<ErrorDTO> searchByKeyword(String keyword, @RequestHeader(value = "Accept-Language", required = false) String language) {
+    @PutMapping("/search/errorCodeKeyWord")
+    public ResponseEntity<String> updateErrorMessages(@RequestBody List<ErrorDTO> errors) {
 
-        return errorService.findErrorByKeyword(keyword);
+        errorService.updateErrorMessage(errors);
+
+        return ResponseEntity.ok("Updated Successfully");
     }
 
+    @PutMapping("/search/errorCodeKeyWordSingle")
+    public ResponseEntity<String> updateErrorMessage(@RequestBody ErrorDTO error) {
 
+        List<ErrorDTO> errors = new ArrayList<>();
+        errors.add(error);
 
+        errorService.updateErrorMessage(errors);
 
-
-
-
+        return ResponseEntity.ok("Updated Successfully");
+    }
 }
