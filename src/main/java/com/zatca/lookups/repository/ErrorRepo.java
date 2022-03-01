@@ -13,4 +13,6 @@ public interface ErrorRepo extends JpaRepository<ErrorMessage, Long> {
     Optional<ErrorMessage> findByCode(String code);
 
     List<ErrorMessage> findByMessageContains(String keyword);
+
+    List<ErrorMessage> findByCodeContainsAndArabicMessageContains(String errorCode, String message, String message1);
 }
