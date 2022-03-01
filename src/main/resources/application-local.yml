@@ -28,3 +28,11 @@ devPortal:
   url: http://localhost:8098/users/update-configs
   timeConfig:
     url: http://localhost:8098/users/update-time-configs
+
+cors:
+  allowed:
+    origins: 'http://localhost:3000,http://portal.gazt.agiletz.com'
+    methods: 'POST,PUT,GET'
+    headers: '*'
+  exposed:
+    headers: '*'
