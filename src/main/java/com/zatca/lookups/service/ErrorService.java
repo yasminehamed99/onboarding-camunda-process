@@ -3,6 +3,7 @@ package com.zatca.lookups.service;
 import com.zatca.lookups.api.v1.dto.errorMessages.ErrorDTO;
 import com.zatca.lookups.entity.ErrorMessage;
 
+import com.zatca.lookups.exception.NotFoundBusinessException;
 import com.zatca.lookups.repository.ErrorRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,7 +105,7 @@ public class ErrorService {
     }
 
     public ErrorDTO finErrorByCode(String errorCode) {
-        ErrorMessage errorMessage = errorRepo.findByCode(errorCode).get();
+        ErrorMessage errorMessage = errorRepo.findByCode(errorCode).orElseThrow(() -> new NotFoundBusinessException(errorCode + " Not Found"));
         return new ErrorDTO(errorMessage.getCode(), errorMessage.getMessage(), errorMessage.getArabicMessage(), errorMessage.getType());
 
     }
