@@ -7,6 +7,7 @@ import com.zatca.lookups.repository.ErrorRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -99,6 +100,12 @@ public class ErrorService {
             e.setArabicMessage(codeErrorMap.get(e.getCode()).getArabicMessage());
             errorRepo.save(e);
         });
+
+    }
+
+    public ErrorDTO finErrorByCode(String errorCode) {
+        ErrorMessage errorMessage = errorRepo.findByCode(errorCode).get();
+        return new ErrorDTO(errorMessage.getCode(), errorMessage.getMessage(), errorMessage.getArabicMessage(), errorMessage.getType());
 
     }
 }

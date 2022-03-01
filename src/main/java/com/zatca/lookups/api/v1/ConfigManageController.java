@@ -52,4 +52,9 @@ public class ConfigManageController {
 
         return ResponseEntity.ok("Updated Successfully");
     }
+
+    @GetMapping("/search/getErrorMessageByCode")
+    public ResponseEntity<ErrorDTO> getErrorMessageByCode(@RequestParam String errorCode) {
+        return ResponseEntity.ok(errorService.finErrorByCode(errorCode));
+    }
 }
