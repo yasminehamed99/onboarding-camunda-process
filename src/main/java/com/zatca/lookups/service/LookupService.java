@@ -1,6 +1,7 @@
 package com.zatca.lookups.service;
 
 import com.zatca.lookups.api.v1.request.RequestLookupDto;
+import com.zatca.lookups.api.v1.request.RequestMetaDataDto;
 import com.zatca.lookups.api.v1.response.ResponseLookupDto;
 import com.zatca.lookups.entity.Lookup;
 import com.zatca.lookups.entity.LookupMetaData;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -49,9 +52,11 @@ public class LookupService {
     public void update(RequestLookupDto requestLookupDto) {
 
         // Get the lookup to be updated
-        Lookup lookup = lookupRepo.findById(requestLookupDto.getId()).orElseThrow(()
-                -> new NotFoundBusinessException("Can't find the lookup lookup with id = " +
-                requestLookupDto.getId()));
+//        Lookup lookup = lookupRepo.findById(requestLookupDto.getId()).orElseThrow(()
+//                -> new NotFoundBusinessException("Can't find the lookup lookup with id = " +
+//                requestLookupDto.getId()));
+
+        Lookup lookup = lookupRepo.findByCode(requestLookupDto.getCode()).orElseThrow(() -> new NotFoundBusinessException("Can't find the lookup with code: " + requestLookupDto.getCode()));
 
         // Get the parent lookup
         Lookup parentLookup = lookupRepo.findByCodeAndLookupStatus(requestLookupDto.getParentCode(),
@@ -185,6 +190,21 @@ public class LookupService {
     }
 
 
+    @Transactional
+    public void updateMetaData(String lookupCode, RequestMetaDataDto request) {
 
+        request.getMetaData().forEach(m -> {
 
+            LookupMetaData lookupMetaData = metaDataRepo.findByLookupCodeAndName(lookupCode, m.getName());
+
+            if(lookupMetaData == null) {
+
+                throw new NotFoundBusinessException("No Meta Data Found For Name: " +  m.getName());
+            }
+
+            lookupMetaData.setValue(m.getValue());
+            metaDataRepo.save(lookupMetaData);
+        });
+
+    }
 }

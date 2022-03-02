@@ -3,6 +3,7 @@ package com.zatca.lookups.api.v1;
 import com.zatca.lookups.api.v1.dto.AdminConfigDTO;
 import com.zatca.lookups.api.v1.dto.ClearanceStatusDTO;
 import com.zatca.lookups.api.v1.request.RequestLookupDto;
+import com.zatca.lookups.api.v1.request.RequestMetaDataDto;
 import com.zatca.lookups.api.v1.response.ResponseLookupDto;
 import com.zatca.lookups.convertorEngine.ConvertorFacade;
 import com.zatca.lookups.entity.Lookup;
@@ -151,6 +152,13 @@ public class LookupController {
         Lookup root = convertor.convertToLookup(request, clearanceConfigRootGroup, clearanceConfigRootCode);
         lookupService.updateLookups(root);
         return ResponseEntity.ok("Saved");
+    }
+
+    @PutMapping("/updateMetaData")
+    public ResponseEntity<String> updateMetaData(@RequestParam String lookupCode, @RequestBody RequestMetaDataDto request) {
+
+        lookupService.updateMetaData(lookupCode, request);
+        return ResponseEntity.ok("Updated");
     }
 
 
