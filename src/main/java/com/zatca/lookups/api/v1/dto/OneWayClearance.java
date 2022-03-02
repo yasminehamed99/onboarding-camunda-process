@@ -1,8 +1,6 @@
 package com.zatca.lookups.api.v1.dto;
 
-import lombok.Data;
+public class OneWayClearance {
 
-@Data
-public class OneWayClearanceDTO {
     private String status;
 }
