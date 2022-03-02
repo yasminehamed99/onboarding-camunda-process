@@ -1,7 +1,6 @@
 package com.zatca.lookups.api.v1;
 
-import com.zatca.lookups.api.v1.dto.AdminConfigDTO;
-import com.zatca.lookups.api.v1.dto.ClearanceStatusDTO;
+import com.zatca.lookups.api.v1.dto.*;
 import com.zatca.lookups.api.v1.request.RequestLookupDto;
 import com.zatca.lookups.api.v1.request.RequestMetaDataDto;
 import com.zatca.lookups.api.v1.response.ResponseLookupDto;
@@ -55,6 +54,9 @@ public class LookupController {
 
     @Autowired
     private LookupRepo lookupRepo;
+
+    private static final String CLEARANCE_LOOKUP_ROOT_CODE = "Root-Clearance-Config";
+    private static final String CLEARANCE_LOOKUP_GROUP = "Root-Clearance-Config-Group";
 
     @GetMapping("rootLookupByDepth")
     public ResponseEntity<ResponseLookupDto> findRoot(int depth) {
@@ -147,7 +149,7 @@ public class LookupController {
     }
 
     @PostMapping("/saveStatus")
-    public ResponseEntity<String> saveStatus(@RequestBody ClearanceStatusDTO request) {
+    public ResponseEntity<String> saveStatus(@RequestBody ClearanceStatus request) {
 
         Lookup root = convertor.convertToLookup(request, clearanceConfigRootGroup, clearanceConfigRootCode);
         lookupService.updateLookups(root);
@@ -161,5 +163,13 @@ public class LookupController {
         return ResponseEntity.ok("Updated");
     }
 
+    @PutMapping("/updateClearanceStatus")
+    public ResponseEntity<String> updateSelfBillingClearanceStatus(@RequestBody ClearanceStatusDto request) {
+
+        Lookup root = convertor.convertToLookup(request, CLEARANCE_LOOKUP_GROUP, CLEARANCE_LOOKUP_ROOT_CODE);
+        lookupService.updateClearanceLookup(root);
+        return ResponseEntity.ok("Updated");
+
+    }
 
 }
