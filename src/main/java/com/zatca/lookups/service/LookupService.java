@@ -62,7 +62,7 @@ public class LookupService {
 
         // Get the parent lookup
         Lookup parentLookup = lookupRepo.findByCodeAndLookupStatus(requestLookupDto.getParentCode(),
-                        LookupStatus.ENABLED).orElseThrow(()
+                LookupStatus.ENABLED).orElseThrow(()
                 -> new NotFoundBusinessException("Can't find the parent lookup with code = " +
                 requestLookupDto.getParentCode()));
 
@@ -76,10 +76,10 @@ public class LookupService {
         lookup = lookupRepo.save(lookup);
 
         Lookup finalLookup = lookup;
-        if(requestLookupDto.getMetaData() != null && !requestLookupDto.getMetaData().isEmpty()) {
+        if (requestLookupDto.getMetaData() != null && !requestLookupDto.getMetaData().isEmpty()) {
             lookup.setLookupMetaData(requestLookupDto.getMetaData().stream().map(m ->
                             new LookupMetaData(m.getName(), m.getValue(), finalLookup)).
-                            collect(Collectors.toList()));
+                    collect(Collectors.toList()));
         }
 
         // Save for the second time to persist the metadata with the created lookup
@@ -92,10 +92,10 @@ public class LookupService {
         // Get the lookup to be updated
         Lookup lookup = lookupRepo.findByCodeAndLookupStatus(lookupCode, LookupStatus.ENABLED)
                 .orElseThrow(() -> new NotFoundBusinessException("Can't find the lookup lookup with code = " +
-                lookupCode));
+                        lookupCode));
 
         // Check if the lookup have one or more child throw an exception
-        if(lookup.getChilds() != null && !lookup.getChilds().isEmpty()) {
+        if (lookup.getChilds() != null && !lookup.getChilds().isEmpty()) {
             lookup.getChilds().parallelStream().forEach(l -> l.setLookupStatus(LookupStatus.DISABLED));
         }
 
@@ -114,12 +114,12 @@ public class LookupService {
 
         // Get the parent lookup
         Lookup parentLookup = lookupRepo.findByCodeAndLookupStatus(requestLookupDto.getParentCode(),
-                        LookupStatus.ENABLED).orElseThrow(()
+                LookupStatus.ENABLED).orElseThrow(()
                 -> new NotFoundBusinessException("Can't find the parent lookup with code = " +
                 requestLookupDto.getParentCode()));
 
         // Throw exception if lookup by same code is exists
-        if(lookupRepo.existsByCode(requestLookupDto.getCode())) {
+        if (lookupRepo.existsByCode(requestLookupDto.getCode())) {
             throw new NotFoundBusinessException("Lookup with code = " +
                     requestLookupDto.getCode());
         }
@@ -134,9 +134,9 @@ public class LookupService {
         lookup = lookupRepo.save(lookup);
 
         Lookup finalLookup = lookup;
-        if(requestLookupDto.getMetaData() != null && !requestLookupDto.getMetaData().isEmpty()) {
+        if (requestLookupDto.getMetaData() != null && !requestLookupDto.getMetaData().isEmpty()) {
             lookup.setLookupMetaData(requestLookupDto.getMetaData().stream().map(m ->
-            new LookupMetaData(m.getName(), m.getValue(), finalLookup)).
+                            new LookupMetaData(m.getName(), m.getValue(), finalLookup)).
                     collect(Collectors.toList()));
         }
 
@@ -199,9 +199,9 @@ public class LookupService {
 
             LookupMetaData lookupMetaData = metaDataRepo.findByLookupCodeAndName(lookupCode, m.getName());
 
-            if(lookupMetaData == null) {
+            if (lookupMetaData == null) {
 
-                throw new NotFoundBusinessException("No Meta Data Found For Name: " +  m.getName());
+                throw new NotFoundBusinessException("No Meta Data Found For Name: " + m.getName());
             }
 
             lookupMetaData.setValue(m.getValue());
@@ -221,6 +221,20 @@ public class LookupService {
             log.error(e.getMessage());
             throw new NotFoundBusinessException(e.getMessage());
         }
+    }
+
+    public String findByNameAndValue(String lookupCode, String name, String value) {
+
+        List<Lookup> lookup = lookupRepo.findByLookupMetaDataNameAndLookupMetaDataValueAndCodeLike(name, value, lookupCode);
+        if (lookup == null || lookup.isEmpty()) {
+            return "ENABLED";
+        }
+        for (LookupMetaData metaData : lookup.get(0).getLookupMetaData()) {
+            if (metaData.getName().equalsIgnoreCase("clearanceStatus")) {
+                return metaData.getValue();
+            }
+        }
+        return "ENABLED";
     }
 
 
