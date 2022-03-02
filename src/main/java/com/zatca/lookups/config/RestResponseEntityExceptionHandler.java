@@ -45,11 +45,11 @@ public class RestResponseEntityExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ConflictBusinessException.class, NotFoundBusinessException.class})
     public ResponseEntity<String> handleValidationExceptions(
             RuntimeException ex) {
 
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }

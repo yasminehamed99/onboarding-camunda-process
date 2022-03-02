@@ -9,6 +9,7 @@ import com.zatca.lookups.entity.LookupStatus;
 import com.zatca.lookups.exception.NotFoundBusinessException;
 import com.zatca.lookups.repository.LookupRepo;
 import com.zatca.lookups.repository.MetaDataRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class LookupService {
 
     @Autowired
@@ -207,4 +209,19 @@ public class LookupService {
         });
 
     }
+
+    public void updateClearanceLookup(Lookup root) {
+
+        try {
+            Lookup lookup = lookupRepo.findByCode(root.getCode()).get();
+            lookupRepo.delete(lookup);
+            log.info("Saving Oneway Clearance Lookup");
+            lookupRepo.save(root);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new NotFoundBusinessException(e.getMessage());
+        }
+    }
+
+
 }

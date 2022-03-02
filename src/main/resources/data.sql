@@ -1,9 +1,6 @@
 SET IDENTITY_INSERT [dbo].[lookup] ON
 INSERT [dbo].[lookup] ([id], [code], [field_name], [group_name], [lookup_status], [java_type], [ref_id]) VALUES (171, N'Root-Vat-Status', NULL, N'Root-Vat-Status-Group', N'ENABLED', N'java.lang.String', NULL)
 INSERT [dbo].[lookup] ([id], [code], [field_name], [group_name], [lookup_status], [java_type], [ref_id]) VALUES (162, N'Root-Clearance-Config', NULL, N'Root-Clearance-Config-Group', N'ENABLED', N'com.zatca.lookups.api.v1.dto.ClearanceStatusDTO', NULL)
-INSERT [dbo].[lookup] ([id], [code], [field_name], [group_name], [lookup_status], [java_type], [ref_id]) VALUES (163, N'Root-Clearance-Config-oneWayClearance', N'oneWayClearance', N'Root-Clearance-Config-Group', N'ENABLED', N'com.zatca.lookups.api.v1.dto.OneWayClearanceDTO', 162)
-INSERT [dbo].[lookup] ([id], [code], [field_name], [group_name], [lookup_status], [java_type], [ref_id]) VALUES (164, N'Root-Clearance-Config-twoWayClearance', N'twoWayClearance', N'Root-Clearance-Config-Group', N'ENABLED', N'com.zatca.lookups.api.v1.dto.twoWayClearanceDTO', 162)
-INSERT [dbo].[lookup] ([id], [code], [field_name], [group_name], [lookup_status], [java_type], [ref_id]) VALUES (165, N'Root-Clearance-Config-selfBillingClearance', N'selfBillingClearance', N'Root-Clearance-Config-Group', N'ENABLED', N'com.zatca.lookups.api.v1.dto.SelfBillingClearanceDTO', 162)
 SET IDENTITY_INSERT [dbo].[lookup] OFF
 SET IDENTITY_INSERT [dbo].[lookup_meta_data] ON
 INSERT [dbo].[lookup_meta_data] ([id], [name], [java_type], [value], [lookup_id]) VALUES (172, N'312345678900003', N'java.lang.String', N'ENABLED', 171)
