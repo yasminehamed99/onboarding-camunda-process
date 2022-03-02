@@ -172,4 +172,10 @@ public class LookupController {
 
     }
 
+    @GetMapping("/findByNameAndValue")
+    public ResponseEntity<String> findByNameAndValue(@RequestParam String lookupCode, @RequestParam String name, @RequestParam String value, @RequestParam String statusName) {
+        String status = lookupService.findByNameAndValue(lookupCode, name, value, statusName);
+        return ResponseEntity.ok(status);
+    }
+
 }
