@@ -31,7 +31,7 @@ public class RequestLookupDto {
     private String code;
 
     @NotBlank(message = "Parent lookup Code can't be null or zero")
-    @Min(value = 1, message = "Parent lookup Code can't be null or zero")
+//    @Min(value = 1, message = "Parent lookup Code can't be null or zero")
     private String parentCode;
 
     private List<RequestLookupMetaDataDto> metaData;

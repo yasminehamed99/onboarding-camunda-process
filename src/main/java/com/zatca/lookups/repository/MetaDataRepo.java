@@ -9,4 +9,9 @@ import org.springframework.stereotype.Repository;
 public interface MetaDataRepo extends JpaRepository<LookupMetaData, Long> {
 
     void deleteAllByLookupId(Long id);
+
+    void deleteByLookupCode(String code);
+
+    LookupMetaData findByLookupCodeAndName(String code, String name);
+
 }
