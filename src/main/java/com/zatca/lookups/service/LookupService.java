@@ -223,19 +223,18 @@ public class LookupService {
         }
     }
 
-    public String findByNameAndValue(String lookupCode, String name, String value) {
+    public String findByNameAndValue(String lookupCode, String name, String value, String statusName) {
 
         List<Lookup> lookup = lookupRepo.findByLookupMetaDataNameAndLookupMetaDataValueAndCodeLike(name, value, lookupCode);
         if (lookup == null || lookup.isEmpty()) {
             return "ENABLED";
         }
         for (LookupMetaData metaData : lookup.get(0).getLookupMetaData()) {
-            if (metaData.getName().equalsIgnoreCase("clearanceStatus")) {
+            if (metaData.getName().equalsIgnoreCase(statusName)) {
                 return metaData.getValue();
             }
         }
         return "ENABLED";
     }
-
 
 }
