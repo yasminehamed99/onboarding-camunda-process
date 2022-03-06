@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -162,10 +163,13 @@ public class LookupService {
     public void updateLookups(Lookup requestLookup) {
 //        lookupRepo.deleteAll();
 
-        Lookup lookup = lookupRepo.findByCode(requestLookup.getCode()).get();
-        lookupRepo.delete(lookup);
-
-        lookupRepo.save(requestLookup);
+        Optional<Lookup> lookup = lookupRepo.findByCode(requestLookup.getCode());
+        lookup.ifPresent(value -> lookupRepo.delete(value));
+        try {
+            lookupRepo.save(requestLookup);
+        } catch (Exception e) {
+            throw new NotFoundBusinessException(e.getMessage());
+        }
 
     }
 
@@ -213,8 +217,8 @@ public class LookupService {
     public void updateClearanceLookup(Lookup root) {
 
         try {
-            Lookup lookup = lookupRepo.findByCode(root.getCode()).get();
-            lookupRepo.delete(lookup);
+            Optional<Lookup> lookup = lookupRepo.findByCode(root.getCode());
+            lookup.ifPresent(value -> lookupRepo.delete(value));
             log.info("Saving Oneway Clearance Lookup");
             lookupRepo.save(root);
         } catch (Exception e) {
