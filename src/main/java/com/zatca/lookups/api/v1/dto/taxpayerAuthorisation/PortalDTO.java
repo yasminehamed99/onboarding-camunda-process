@@ -10,9 +10,9 @@ import javax.validation.constraints.NotNull;
 public class PortalDTO {
 
     @NotNull(message = "Authorised Status can't be null or empty")
-    private AuthorisedStatus authorisedStatus;
+    private String authorisedStatus;
     @NotNull(message = "Authorised Status Until Buffer Period End can't be null or empty")
-    private AuthorisedStatusUntilBufferPeriodEnd authorisedStatusUntilBufferPeriodEnd;
+    private String authorisedStatusUntilBufferPeriodEnd;
     @Min(value = 0, message = "value can't be less than zero")
     private long value;
     @NotBlank(message = "Time Period can't be empty")

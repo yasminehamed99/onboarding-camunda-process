@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component("AccountLockoutTimeConfig")
 @Slf4j
@@ -34,8 +35,11 @@ public class AccountLockoutTimeConfig implements LookupInterceptor {
     @Override
     public void intercept(Lookup lookup) {
 
-        Lookup oldLookup = lookupRepo.findByCode("Root-Admin-Config-developerPortal-accountLock").get();
-        List<LookupMetaData> oldMetaData = oldLookup.getLookupMetaData();
+        Optional<Lookup> oldLookup = lookupRepo.findByCode("Root-Admin-Config-developerPortal-accountLock");
+        if (oldLookup.isPresent()) {
+            return;
+        }
+        List<LookupMetaData> oldMetaData = oldLookup.get().getLookupMetaData();
         List<LookupMetaData> newMetaData =  null; //lookup.getLookupMetaData();
 
         for (Lookup l : lookup.getChilds()) {
