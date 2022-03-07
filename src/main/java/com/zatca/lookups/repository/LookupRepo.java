@@ -25,4 +25,6 @@ public interface LookupRepo extends JpaRepository<Lookup, Long> {
             "where lm.name=:name and lm.value=:value " +
             "and l.code like %:lookupCode% ",nativeQuery = true)
     List<Lookup> findByLookupMetaDataNameAndLookupMetaDataValueAndCodeLike( String name, String value,String lookupCode);
+
+    List<Lookup> findByCodeContainsAndType(String code, String type);
 }
