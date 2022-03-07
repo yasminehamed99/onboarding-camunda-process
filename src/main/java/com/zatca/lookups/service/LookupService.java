@@ -241,4 +241,7 @@ public class LookupService {
         return "ENABLED";
     }
 
+    public List<Lookup> findByCodeContainsAndType(String code, String type) {
+        return lookupRepo.findByCodeContainsAndType(code, type);
+    }
 }
