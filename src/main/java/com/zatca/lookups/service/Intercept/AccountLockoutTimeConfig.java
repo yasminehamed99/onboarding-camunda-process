@@ -36,7 +36,7 @@ public class AccountLockoutTimeConfig implements LookupInterceptor {
     public void intercept(Lookup lookup) {
 
         Optional<Lookup> oldLookup = lookupRepo.findByCode("Root-Admin-Config-developerPortal-accountLock");
-        if (oldLookup.isPresent()) {
+        if (!oldLookup.isPresent()) {
             return;
         }
         List<LookupMetaData> oldMetaData = oldLookup.get().getLookupMetaData();
