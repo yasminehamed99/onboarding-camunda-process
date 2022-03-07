@@ -1,16 +1,20 @@
 package com.zatca.lookups.api.v1.dto.cms;
 
-import javax.validation.constraints.NotBlank;
+import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+@Data
 public class EInvoiceSpecifications {
-    @NotBlank(message = "This field is required")
+    @NotNull(message = "block1 field is required")
     public String block1;
-    @NotBlank(message = "This field is required")
+    @NotNull(message = "block1Ar field is required")
     public String block1Ar;
-    @NotBlank(message = "This field is required")
+    @NotNull(message = "xmlStandard field is required")
     public String xmlStandard;
-    @NotBlank(message = "This field is required")
+    @NotNull(message = "securityStandard field is required")
     public String securityStandard;
-    @NotBlank(message = "This field is required")
+    @NotNull(message = "dataDictionary field is required")
     public String dataDictionary;
 }

@@ -26,7 +26,7 @@ public class LookupMetaData implements Serializable {
     @Column(name = "Name", nullable = false)
     private String name;
 
-    @Column(name = "Value", nullable = false)
+    @Column(name = "Value", nullable = false, columnDefinition = "nvarchar(255)")
     private String value;
 
     @Column(name = "JavaType")

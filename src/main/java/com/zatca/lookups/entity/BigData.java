@@ -17,7 +17,7 @@ public class BigData {
     private Long id;
 
     @Lob
-    @Column(name = "Data", columnDefinition = "CLOB")
+    @Column(name = "Data", columnDefinition = "nvarchar(max)")
     private String data;
 
     @OneToOne

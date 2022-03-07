@@ -1,11 +1,18 @@
-package com.zatca.lookups.api.v1.dto.cms; 
-public class Tab{
-    @NotBlank(message = "This field is required") 
- public String file;
-    @NotBlank(message = "This field is required") 
- public String arabicTitle;
-    @NotBlank(message = "This field is required") 
- public String englishTitle;
-    @NotBlank(message = "This field is required") 
- public String link;
+package com.zatca.lookups.api.v1.dto.cms;
+
+import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+@Data
+public class Tab {
+    @NotNull(message = "file field is required")
+    public String file;
+    @NotNull(message = "arabicTitle field is required")
+    public String arabicTitle;
+    @NotNull(message = "englishTitle field is required")
+    public String englishTitle;
+    @NotNull(message = "link field is required")
+    public String link;
 }

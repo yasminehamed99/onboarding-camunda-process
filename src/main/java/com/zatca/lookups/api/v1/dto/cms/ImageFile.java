@@ -1,9 +1,13 @@
 package com.zatca.lookups.api.v1.dto.cms;
 
-import javax.validation.constraints.NotBlank;
+import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+@Data
 public class ImageFile {
 
-    @NotBlank(message = "This field is required")
+    @NotNull(message = "uid field is required")
     public String uid;
 }

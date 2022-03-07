@@ -52,8 +52,12 @@ public class ConvertorFacade {
                 Field f = object.getClass().getDeclaredField(c.getFieldName());
                 f.setAccessible(true);
                 String code = c.getParentLookup().getCode() + "-" + c.getFieldName();
-                if(c.getIsList() && !lookupCollectionsSet.contains(code)) {
-                    List<Lookup> lookupList = lookupRepo.findByCodeContains(code);
+
+                if(lookupCollectionsSet.contains(code))
+                    return;
+
+                if(c.getIsList()) {
+                    List<Lookup> lookupList = lookupRepo.findByCodeContainsAndType(code, c.getType());
                     List list = lookupList.stream().map(cx -> {
                         try {
                             return convertFromLookup(cx, Class.forName(cx.getType()));
@@ -256,6 +260,7 @@ public class ConvertorFacade {
         meta.setLookup(lookup);
         if(f.isAnnotationPresent(DataProperty.class)) {
             meta.setType(DATA_TYPE);
+            meta.setValue("");
             meta.setBigData(new BigData(String.valueOf(valueObj), meta));
         } else if(primitvesMap.containsKey(f.getType())) {
             meta.setType(primitvesMap.get(f.getType()).getCanonicalName());

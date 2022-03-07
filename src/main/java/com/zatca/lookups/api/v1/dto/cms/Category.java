@@ -1,17 +1,21 @@
 package com.zatca.lookups.api.v1.dto.cms;
 
-import javax.validation.constraints.NotBlank;
+import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+@Data
 public class Category {
 
-    @NotBlank(message = "This field is required")
+    @NotNull(message = "arabicTitle field is required")
     public String arabicTitle;
-    @NotBlank(message = "This field is required")
+    @NotNull(message = "englishTitle field is required")
     public String englishTitle;
-    @NotBlank(message = "This field is required")
+    @NotNull(message = "icon field is required")
     public String icon;
-    @NotBlank(message = "This field is required")
+    @NotNull(message = "uniqueId field is required")
     public String uniqueId;
-    @NotBlank(message = "This field is required")
+    @NotNull(message = "iconFile field is required")
     public String iconFile;
 }

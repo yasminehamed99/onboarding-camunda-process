@@ -1,7 +1,17 @@
-package com.zatca.lookups.api.v1.dto.cms; 
-public class SdkSupport{
-    @NotBlank(message = "This field is required") 
- public String arabicSdkSupport;
-    @NotBlank(message = "This field is required") 
- public String englishSdkSupport;
+package com.zatca.lookups.api.v1.dto.cms;
+
+import com.zatca.lookups.api.v1.dto.annotations.DataProperty;
+import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+@Data
+public class SdkSupport {
+    @NotNull(message = "arabicSdkSupport field is required")
+    @DataProperty
+    public String arabicSdkSupport;
+    @NotNull(message = "englishSdkSupport field is required")
+    @DataProperty
+    public String englishSdkSupport;
 }
