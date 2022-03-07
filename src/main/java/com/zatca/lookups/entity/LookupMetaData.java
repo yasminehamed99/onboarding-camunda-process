@@ -36,6 +36,9 @@ public class LookupMetaData implements Serializable {
     @JoinColumn(name = "lookupId", referencedColumnName = "Id")
     private Lookup lookup;
 
+    @OneToOne(mappedBy = "lookupMetaData", cascade = CascadeType.ALL)
+    private BigData bigData;
+
     public ResponseLookupMetaDataDto convertToDto() {
         return new ResponseLookupMetaDataDto(name, value);
     }

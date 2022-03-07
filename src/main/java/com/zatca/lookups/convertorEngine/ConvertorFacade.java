@@ -1,5 +1,7 @@
 package com.zatca.lookups.convertorEngine;
 
+import com.zatca.lookups.api.v1.dto.annotations.DataProperty;
+import com.zatca.lookups.entity.BigData;
 import com.zatca.lookups.entity.Lookup;
 import com.zatca.lookups.entity.LookupMetaData;
 import com.zatca.lookups.entity.LookupStatus;
@@ -9,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +22,8 @@ public class ConvertorFacade {
 
     @Autowired
     private LookupRepo lookupRepo;
+
+    private static final String DATA_TYPE = "DATA_TYPE";
 
     private int counter = 1;
     private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
@@ -187,7 +190,11 @@ public class ConvertorFacade {
             try {
                 Field f = object.getClass().getDeclaredField(m.getName());
                 f.setAccessible(true);
-                f = fillField(object, m.getValue(), m.getType(), f);
+                if(m.getType().equals(DATA_TYPE)) {
+                    f.set(object, m.getBigData().getData());
+                } else {
+                    f = fillField(object, m.getValue(), m.getType(), f);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new ConvertingException(String.format("Exception while filling the field with name = %s in the object of class = %s and value = %s",
@@ -245,13 +252,18 @@ public class ConvertorFacade {
 
     private LookupMetaData createMeta(Field f, Object valueObj, Lookup lookup) {
         LookupMetaData meta = new LookupMetaData();
-        meta.setValue(valueObj == null ? null : String.valueOf(valueObj));
         meta.setName(f.getName());
         meta.setLookup(lookup);
-        if(primitvesMap.containsKey(f.getType()))
+        if(f.isAnnotationPresent(DataProperty.class)) {
+            meta.setType(DATA_TYPE);
+            meta.setBigData(new BigData(String.valueOf(valueObj), meta));
+        } else if(primitvesMap.containsKey(f.getType())) {
             meta.setType(primitvesMap.get(f.getType()).getCanonicalName());
-        else
+            meta.setValue(valueObj == null ? null : String.valueOf(valueObj));
+        }  else {
             meta.setType(f.getType().getCanonicalName());
+            meta.setValue(valueObj == null ? null : String.valueOf(valueObj));
+        }
 
         return meta;
     }
