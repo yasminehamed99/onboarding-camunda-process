@@ -4,15 +4,14 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class NotificationInfoDTO {
+public class NotificationOnboardingInfoDTO {
 
-    @Min(value = 0, message = "SME Portal Access Revocation Number Of Reminders can't be less than zero")
-    private long smePortalAccessRevocationNumberOfReminders;
+
+    @Min(value = 0, message = "CSID Expiry Number Of Reminders can't be less than zero")
+    private long csidExpiryNumberOfReminders;
     @NotNull(message = "Reminders can't be null")
     private List<Reminder> reminders;
-
 }

@@ -26,7 +26,7 @@ public class LookupMetaData implements Serializable {
     @Column(name = "Name", nullable = false)
     private String name;
 
-    @Column(name = "Value", nullable = false)
+    @Column(name = "Value", nullable = false, columnDefinition = "nvarchar(255)")
     private String value;
 
     @Column(name = "JavaType")
@@ -35,6 +35,9 @@ public class LookupMetaData implements Serializable {
     @ManyToOne
     @JoinColumn(name = "lookupId", referencedColumnName = "Id")
     private Lookup lookup;
+
+    @OneToOne(mappedBy = "lookupMetaData", cascade = CascadeType.ALL)
+    private BigData bigData;
 
     public ResponseLookupMetaDataDto convertToDto() {
         return new ResponseLookupMetaDataDto(name, value);

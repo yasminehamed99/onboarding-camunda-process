@@ -1,6 +1,7 @@
 package com.zatca.lookups.api.v1;
 
 import com.zatca.lookups.api.v1.dto.*;
+import com.zatca.lookups.api.v1.dto.cms.CmsDto;
 import com.zatca.lookups.api.v1.request.RequestLookupDto;
 import com.zatca.lookups.api.v1.request.RequestMetaDataDto;
 import com.zatca.lookups.api.v1.response.ResponseLookupDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.Optional;
 
 @Validated
 @RestController
@@ -57,6 +59,9 @@ public class LookupController {
 
     private static final String CLEARANCE_LOOKUP_ROOT_CODE = "Root-Clearance-Config";
     private static final String CLEARANCE_LOOKUP_GROUP = "Root-Clearance-Config-Group";
+
+    private static final String CMS_LOOKUP_ROOT_CODE = "Root-Cms-Config";
+    private static final String CMS_LOOKUP_GROUP = "Root-Cms-Config-Group";
 
     @GetMapping("rootLookupByDepth")
     public ResponseEntity<ResponseLookupDto> findRoot(int depth) {
@@ -164,7 +169,7 @@ public class LookupController {
     }
 
     @PutMapping("/updateClearanceStatus")
-    public ResponseEntity<String> updateSelfBillingClearanceStatus(@RequestBody ClearanceStatusDto request) {
+    public ResponseEntity<String> updateSelfBillingClearanceStatus(@Valid @RequestBody ClearanceStatusDto request) {
 
         Lookup root = convertor.convertToLookup(request, CLEARANCE_LOOKUP_GROUP, CLEARANCE_LOOKUP_ROOT_CODE);
         lookupService.updateClearanceLookup(root);
@@ -176,6 +181,27 @@ public class LookupController {
     public ResponseEntity<String> findByNameAndValue(@RequestParam String lookupCode, @RequestParam String name, @RequestParam String value, @RequestParam String statusName) {
         String status = lookupService.findByNameAndValue(lookupCode, name, value, statusName);
         return ResponseEntity.ok(status);
+    }
+
+    @PutMapping("/updateCMS")
+    public ResponseEntity<String> updateCms(@Valid @RequestBody CmsDto request) {
+        Lookup root = convertor.convertToLookup(request, CMS_LOOKUP_GROUP, CMS_LOOKUP_ROOT_CODE);
+
+        lookupService.updateLookups(root);
+
+        return ResponseEntity.ok("Updated Successfully");
+    }
+
+    @GetMapping("/getCMS")
+    public ResponseEntity<CmsDto> getClearanceDto(@RequestParam String lookupCode) {
+
+        Optional<Lookup> root = lookupRepo.findByCode(lookupCode);
+        if (root.isPresent()) {
+            CmsDto dto = convertor.convertFromLookup(root.get(), CmsDto.class);
+            return ResponseEntity.ok(dto);
+        }
+        return ResponseEntity.badRequest().build();
+
     }
 
 }
