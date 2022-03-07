@@ -7,7 +7,7 @@ import javax.validation.Valid;
 @Data
 public class Sandbox{
     @Valid
-    public Home home;
+    public SandboxHome home;
     @Valid
     public Faqs faqs;
     @Valid

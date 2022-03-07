@@ -6,8 +6,11 @@ import com.zatca.lookups.entity.Lookup;
 import com.zatca.lookups.entity.LookupMetaData;
 import com.zatca.lookups.entity.LookupStatus;
 import com.zatca.lookups.repository.LookupRepo;
+import com.zatca.lookups.service.LookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -18,10 +21,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class ConvertorFacade {
 
     @Autowired
-    private LookupRepo lookupRepo;
+    private LookupService lookupService;
 
     private static final String DATA_TYPE = "DATA_TYPE";
 
@@ -40,7 +44,9 @@ public class ConvertorFacade {
         primitvesMap.put(double.class, Double.class);
     }
 
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public <T extends Object> T convertFromLookup(Lookup lookup, Class<T> type) {
+        lookupCollectionsSet = new HashSet<>();
         if(lookup.getType().equals(type))
             throw new ConvertingException("Lookup have different type from the provided type");
 
@@ -57,7 +63,7 @@ public class ConvertorFacade {
                     return;
 
                 if(c.getIsList()) {
-                    List<Lookup> lookupList = lookupRepo.findByCodeContainsAndType(code, c.getType());
+                    List<Lookup> lookupList = lookupService.findByCodeContainsAndType(code, c.getType());
                     List list = lookupList.stream().map(cx -> {
                         try {
                             return convertFromLookup(cx, Class.forName(cx.getType()));
@@ -80,6 +86,7 @@ public class ConvertorFacade {
         return object;
     }
 
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public Lookup convertToLookup(Object object, String rootGroup, String rootCode) {
         counter = 0;
         lookupCollectionsSet = new HashSet<>();
