@@ -164,7 +164,7 @@ public class LookupController {
     }
 
     @PutMapping("/updateClearanceStatus")
-    public ResponseEntity<String> updateSelfBillingClearanceStatus(@RequestBody ClearanceStatusDto request) {
+    public ResponseEntity<String> updateSelfBillingClearanceStatus(@Valid @RequestBody ClearanceStatusDto request) {
 
         Lookup root = convertor.convertToLookup(request, CLEARANCE_LOOKUP_GROUP, CLEARANCE_LOOKUP_ROOT_CODE);
         lookupService.updateClearanceLookup(root);
