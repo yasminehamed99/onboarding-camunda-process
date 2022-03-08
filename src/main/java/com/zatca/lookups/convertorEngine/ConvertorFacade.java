@@ -156,8 +156,8 @@ public class ConvertorFacade {
                 boolean isObjList = f.getType().getCanonicalName().equals("java.util.List");
                 if (isObjList) {
                     List list = (List) fieldObject;
-                    list.stream().forEach(fieldObj -> lookup.getChilds().add(convertToLookup(lookup, f, fieldObj, true)));
-                    System.out.println(lookup);
+                    if(list != null)
+                        list.stream().forEach(fieldObj -> lookup.getChilds().add(convertToLookup(lookup, f, fieldObj, true)));
                 } else {
                     lookup.getChilds().add(convertToLookup(lookup, f, fieldObject, false));
                 }

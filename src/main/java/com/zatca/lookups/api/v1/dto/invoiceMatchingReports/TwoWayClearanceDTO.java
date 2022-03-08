@@ -16,9 +16,9 @@ public class TwoWayClearanceDTO {
     private long maxPeriodOfMatchingReports;
     @Min(value = 0, message = "Max Historical Data For Matching Reports can't be less than zero")
     private long maxHistoricalDataForMatchingReports;
-    @NotBlank(message = "Max Period Of Matching Reports Time can't be null or empty")
+    //@NotBlank(message = "Max Period Of Matching Reports Time can't be null or empty")
     private String maxPeriodOfMatchingReportsTime;
-    @NotBlank(message = "Max Historical Data For Matching Reports Time can't be null or empty")
+    //@NotBlank(message = "Max Historical Data For Matching Reports Time can't be null or empty")
     private String maxHistoricalDataForMatchingReportsTime;
 
 }
