@@ -12,7 +12,6 @@ public class NotificationInfoDTO {
 
     @Min(value = 0, message = "SME Portal Access Revocation Number Of Reminders can't be less than zero")
     private long smePortalAccessRevocationNumberOfReminders;
-    @NotNull(message = "Reminders can't be null")
     private List<Reminder> reminders;
 
 }
