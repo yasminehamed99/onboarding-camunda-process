@@ -12,6 +12,5 @@ public class NotificationOnboardingInfoDTO {
 
     @Min(value = 0, message = "CSID Expiry Number Of Reminders can't be less than zero")
     private long csidExpiryNumberOfReminders;
-    @NotNull(message = "Reminders can't be null")
     private List<Reminder> reminders;
 }
