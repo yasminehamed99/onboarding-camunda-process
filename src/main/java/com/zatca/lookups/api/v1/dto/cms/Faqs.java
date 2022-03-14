@@ -15,7 +15,9 @@ public class Faqs {
     @DataProperty
     public String englishIntroduction;
     @NotNull(message = "questions field is required")
+    @DataProperty
     public List<Question> questions;
     @NotNull(message = "categories field is required")
+    @DataProperty
     public List<Category> categories;
 }
