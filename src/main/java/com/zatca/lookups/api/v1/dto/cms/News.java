@@ -18,4 +18,7 @@ public class News {
     public String image;
     @Valid
     public ImageFile imageFile;
+    @DataProperty
+    @NotBlank(message = "image field is required")
+    private String file;
 }
