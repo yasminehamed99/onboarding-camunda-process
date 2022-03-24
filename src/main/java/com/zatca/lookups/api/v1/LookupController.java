@@ -184,7 +184,7 @@ public class LookupController {
     }
 
     @PutMapping("/updateCMS")
-    public ResponseEntity<String> updateCms(@Valid @RequestBody CmsDto request) {
+        public ResponseEntity<String> updateCms(@Valid @RequestBody CmsDto request) {
         Lookup root = convertor.convertToLookup(request, CMS_LOOKUP_GROUP, CMS_LOOKUP_ROOT_CODE);
 
         lookupService.updateLookups(root);
