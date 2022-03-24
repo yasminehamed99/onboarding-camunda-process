@@ -9,12 +9,16 @@ import javax.validation.constraints.NotNull;
 @Data
 public class DownloadSDK {
     @NotNull(message = "block1 field is required")
+    @DataProperty
     public String block1;
     @NotNull(message = "block1Ar field is required")
+    @DataProperty
     public String block1Ar;
     @NotNull(message = "block2 field is required")
+    @DataProperty
     public String block2;
     @NotNull(message = "block2Ar field is required")
+    @DataProperty
     public String block2Ar;
     @NotNull(message = "userManual field is required")
     public String userManual;
