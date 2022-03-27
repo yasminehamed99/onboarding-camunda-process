@@ -10,7 +10,7 @@ public class Sdk{
     @Valid
     public DownloadSDK downloadSDK;
     @Valid
-    public EInvoiceSpecifications eInvoiceSpecifications;
+    public EInvoiceSpecifications einvoiceSpecifications;
     @Valid
     public SdkSupport sdkSupport;
     @NotNull(message = "versionHistory field is required")
