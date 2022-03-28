@@ -1,5 +1,6 @@
 package com.zatca.lookups.api.v1.dto.cms;
 
+import com.zatca.lookups.api.v1.dto.annotations.DataProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -14,5 +15,6 @@ public class Question {
     @NotNull(message = "category field is required")
     public String category;
     @NotNull(message = "answer field is required")
+    @DataProperty
     public String answer;
 }
