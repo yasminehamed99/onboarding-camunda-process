@@ -7,9 +7,13 @@ import javax.validation.Valid;
 @Data
 public class Sandbox{
     @Valid
-    public SandboxHome home;
+    private SandboxHome home;
     @Valid
-    public Faqs faqs;
+    private Faqs faqs;
     @Valid
-    public Sdk sdk;
+    private Sdk sdk;
+    @Valid
+    private XmlValidation xmlValidation;
+    @Valid
+    private Isb isb;
 }
