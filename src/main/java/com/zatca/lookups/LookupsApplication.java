@@ -48,19 +48,19 @@ public class LookupsApplication {
 	@Bean
 	CommandLineRunner runner() throws IOException {
 
-		List<ErrorMessage> errorMessages = errorRepo.findAll();
-		Optional<Lookup> root = lookupRepo.findByCode(adminConfigRootCode);
-		if (ObjectUtils.isEmpty(root)) {
-			File file = new File("/resources/data.sql");
-			String insertStatements= new String(Files.readAllBytes(file.toPath()));
-			jdbcTemplate.execute(insertStatements);
-		}
-
-		if (ObjectUtils.isEmpty(errorMessages)) {
-			File file = new File("/resources/messagesData.sql");
-			String insertStatements= new String(Files.readAllBytes(file.toPath()));
-			jdbcTemplate.execute(insertStatements);
-		}
+//		List<ErrorMessage> errorMessages = errorRepo.findAll();
+//		Optional<Lookup> root = lookupRepo.findByCode(adminConfigRootCode);
+//		if (ObjectUtils.isEmpty(root)) {
+//			File file = new File("/resources/data.sql");
+//			String insertStatements= new String(Files.readAllBytes(file.toPath()));
+//			jdbcTemplate.execute(insertStatements);
+//		}
+//
+//		if (ObjectUtils.isEmpty(errorMessages)) {
+//			File file = new File("/resources/messagesData.sql");
+//			String insertStatements= new String(Files.readAllBytes(file.toPath()));
+//			jdbcTemplate.execute(insertStatements);
+//		}
 
 		return args -> {
 			log.info("Command Line Runner Executed");
