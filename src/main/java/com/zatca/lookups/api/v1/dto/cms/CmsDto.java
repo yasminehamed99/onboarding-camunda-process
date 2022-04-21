@@ -11,4 +11,6 @@ public class CmsDto {
     public Sandbox sandbox;
     @Valid
     public EInvoicing einvoicing;
+    @Valid
+    private Fatoora fatoora;
 }
