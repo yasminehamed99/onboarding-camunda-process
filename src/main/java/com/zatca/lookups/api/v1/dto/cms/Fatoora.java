@@ -8,5 +8,5 @@ public class Fatoora{
     public FatooraHome home;
     public ListOfDevices listOfDevices;
     public InvoiceMatchingReports invoiceMatchingReports;
-    public EInvoiceStatistics eInvoiceStatistics;
+    public EinvoiceStatistics einvoiceStatistics;
 }
