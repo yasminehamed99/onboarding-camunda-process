@@ -1,6 +1,30 @@
 package com.zatca.lookups.api.v1;
 
-import com.zatca.lookups.api.v1.dto.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zatca.lookups.api.v1.dto.AdminConfigDTO;
+import com.zatca.lookups.api.v1.dto.ClearanceStatus;
+import com.zatca.lookups.api.v1.dto.ClearanceStatusDto;
 import com.zatca.lookups.api.v1.dto.cms.CmsDto;
 import com.zatca.lookups.api.v1.request.RequestLookupDto;
 import com.zatca.lookups.api.v1.request.RequestMetaDataDto;
@@ -8,19 +32,8 @@ import com.zatca.lookups.api.v1.response.ResponseLookupDto;
 import com.zatca.lookups.convertorEngine.ConvertorFacade;
 import com.zatca.lookups.entity.Lookup;
 import com.zatca.lookups.repository.LookupRepo;
-import com.zatca.lookups.service.Intercept.LookupInterceptor;
 import com.zatca.lookups.service.LookupService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import java.util.Optional;
+import com.zatca.lookups.service.Intercept.LookupInterceptor;
 
 @Validated
 @RestController
@@ -193,10 +206,16 @@ public class LookupController {
     }
 
     @GetMapping("/getCMS")
-    public ResponseEntity<CmsDto> getClearanceDto(@RequestParam String lookupCode) {
+    public ResponseEntity<CmsDto> getClearanceDto(@RequestParam String lookupCode, @RequestParam(required = false) String metaName ) {
 
         Optional<Lookup> root = lookupRepo.findByCode(lookupCode);
         if (root.isPresent()) {
+        	
+        	if (metaName != null && !metaName.trim().isEmpty()) {
+        		List<Lookup> filteredChilds = lookupService.filterLookupChilds(root.get().getChilds(), metaName);
+            	root.get().setChilds(filteredChilds);
+        	}
+        	
             CmsDto dto = convertor.convertFromLookup(root.get(), CmsDto.class);
             return ResponseEntity.ok(dto);
         }
