@@ -244,4 +244,10 @@ public class LookupService {
     public List<Lookup> findByCodeContainsAndType(String code, String type) {
         return lookupRepo.findByCodeContainsAndType(code, type);
     }
+    
+    public List<Lookup> filterLookupChilds (List<Lookup> childs, String fieldName){
+    	return childs.stream().
+			filter(l -> l.getFieldName().equalsIgnoreCase(fieldName)).collect(Collectors.toList());
+    }
+    
 }
