@@ -21,4 +21,10 @@ public class News {
     @DataProperty
     @NotBlank(message = "image field is required")
     private String file;
+    @NotBlank(message = "link field is required")
+    private String link;
+    @NotBlank(message = "withLink field is required")
+    private boolean withLink;
+    @NotBlank(message = "date field is required")
+    private String date;
 }
