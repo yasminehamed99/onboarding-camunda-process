@@ -233,6 +233,10 @@ public class LookupService {
         if (lookup == null || lookup.isEmpty()) {
             return "ENABLED";
         }
+        
+        if (lookup.get(0).getLookupStatus() == LookupStatus.DISABLED) {
+        	return "DISABLED";
+        }
         for (LookupMetaData metaData : lookup.get(0).getLookupMetaData()) {
             if (metaData.getName().equalsIgnoreCase(statusName)) {
                 return metaData.getValue();
